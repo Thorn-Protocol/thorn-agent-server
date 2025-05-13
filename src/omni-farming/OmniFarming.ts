@@ -1,6 +1,6 @@
 import { Module } from "../modules/Module";
 import { Mutex } from "async-mutex";
-import { OmniFarmingModule } from "../modules/OmniFarmingModule";
+import { OmniFarmingModule } from "./OmniFarmingModule";
 import { TIME_EACH_PROCESS } from "../common/config/config";
 
 export class OmniFarming {
@@ -27,11 +27,10 @@ export class OmniFarming {
                 console.log("No modules found");
                 return;
             }
-            let bestModule = this.bestModule;
+            let bestModule = this.modules[0];
             let bestAPY = await bestModule.getAPY();
             for (const module of this.modules) {
                 let apy = await module.getAPY();
-
                 if (apy >= bestAPY) {
                     bestModule = module;
                     bestAPY = apy;
@@ -44,9 +43,9 @@ export class OmniFarming {
                     await module.transferAllToModule(bestModule);
                 }
             }
-            let amountNeedForWithdraw = await this.omnifarming.getAmountNeedForWithdraw();
-            await this.bestModule.withdraw(amountNeedForWithdraw, this.omnifarming);
-            await this.omnifarming.WithdrawProcess();
+            let amountUSDCNeedBridgeForWithdraw = await this.omnifarming.getAmountNeedForWithdraw();
+            await this.bestModule.withdraw(amountUSDCNeedBridgeForWithdraw, this.omnifarming);
+            await this.omnifarming.withdrawProcess();
             await this.omnifarming.bridgeToModule(bestModule);
             await bestModule.deposit();
         } catch (error) {
@@ -56,7 +55,6 @@ export class OmniFarming {
 
     async setup() {
         await this.processing();
-
         const interval = setInterval(async () => {
             if (!this.mutex.isLocked()) {
                 try {

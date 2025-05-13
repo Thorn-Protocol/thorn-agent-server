@@ -1,4 +1,4 @@
-import { OmniFarmingModule } from "./OmniFarmingModule";
+import { OmniFarmingModule } from "../omni-farming/OmniFarmingModule";
 
 export abstract class Module {
     public abstract name: string;

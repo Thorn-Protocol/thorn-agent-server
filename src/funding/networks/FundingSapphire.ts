@@ -21,7 +21,7 @@ export class FungingSapphire extends FungingTemplate {
     }
 
     async funding(amount: bigint, address: string, txnHash: string) {
-        console.log("Funding fee for address: ", address, "with amount: ", amount, "and txnHash: ", txnHash);
+        console.log("Funding fee amount at Sapphire: ", amount);
         let usdcContract = ERC20__factory.connect(this.usdc, this.agent);
         let balance = await usdcContract.balanceOf(this.address);
         if (balance < amount) {
@@ -29,7 +29,7 @@ export class FungingSapphire extends FungingTemplate {
             return;
         }
         let txResponse = await this.contract.fee_compensation(txnHash, address, amount);
-        await txResponse.wait();
-        console.log("Funded successfully at https://explorer.oasis.io/mainnet/sapphire/tx/" + txnHash);
+        let txReceipt = await txResponse.wait();
+        console.log("Funded successfully at https://explorer.oasis.io/mainnet/sapphire/tx/" + txReceipt!.hash);
     }
 }

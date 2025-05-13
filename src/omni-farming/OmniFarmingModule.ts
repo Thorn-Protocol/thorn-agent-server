@@ -1,7 +1,7 @@
 import { ethers, parseUnits, Wallet } from "ethers";
 import { Provider } from "ethers";
 import { JsonRpcProvider } from "ethers";
-import { Module } from "./Module";
+import { Module } from "../modules/Module";
 import { CHAIN_ID, EVM_ADDRESS, RPC } from "../common/config/config";
 import { ERC20__factory, OmniFarming, OmniFarming__factory } from "../typechain-types";
 import { isProduction } from "../common/config/secrets";
@@ -29,47 +29,16 @@ export class OmniFarmingModule {
     }
 
     async getAmountNeedForWithdraw() {
-        const amountLP = await this.omnifarming.totalSupplyLocked();
+        const totalLpLocked = await this.omnifarming.totalSupplyLocked();
         const rate = await this.getRate();
-        const amountNeedForWithdraw = (amountLP * rate) / 10n ** 18n;
-
+        const amountNeedForWithdraw = (totalLpLocked * rate) / 10n ** 18n;
         let balanceUSDC = await ERC20__factory.connect(this.usdcAddress, this.agent).balanceOf(this.address);
-        if (balanceUSDC > amountNeedForWithdraw) {
+        if (balanceUSDC >= amountNeedForWithdraw) {
             return 0;
         } else {
             let result = Number(ethers.formatUnits(((amountNeedForWithdraw - balanceUSDC) * 105n) / 100n, 6));
             return result;
         }
-    }
-
-    async checkEnoughUSDCForWithdraw() {
-        let balanceUSDC = await ERC20__factory.connect(this.usdcAddress, this.agent).balanceOf(this.address);
-        const amountLP = await this.omnifarming.totalSupplyLocked();
-        const rate = await this.getRate();
-        const amountNeedForWithdraw = (amountLP * rate) / 10n ** 18n;
-        if (balanceUSDC > amountNeedForWithdraw) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    async enableWithdrawing() {
-        console.log("Processing enable withdrawing transaction....");
-        if (isProduction) {
-            let txResponse = await this.omnifarming.setWithdrawing(true);
-            await txResponse.wait();
-        }
-        console.log("Enable withdrawing transaction success!!!");
-    }
-
-    async disableWithdrawing() {
-        console.log("Processing disable withdrawing transaction....");
-        if (isProduction) {
-            let txResponse = await this.omnifarming.setWithdrawing(false);
-            await txResponse.wait();
-        }
-        console.log("Disable withdrawing transaction success!!!");
     }
 
     async checkAndWithdrawForUser() {
@@ -101,7 +70,7 @@ export class OmniFarmingModule {
         console.log("Withdraw for user success");
     }
 
-    async WithdrawProcess() {
+    async withdrawProcess() {
         let size = await this.omnifarming.getWithdrawListLength();
         if (size > 0) {
             console.log(`Agent: There are ${size} withdraw requests`);

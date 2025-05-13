@@ -5,7 +5,7 @@ import { CompoundV3Module, CompoundV3Module__factory, ERC20, ERC20__factory } fr
 import { Module } from "../../Module";
 import { routerService } from "../../../bridge/RouterService";
 import { isProduction } from "../../../common/config/secrets";
-import { OmniFarmingModule } from "../../OmniFarmingModule";
+import { OmniFarmingModule } from "../../../omni-farming/OmniFarmingModule";
 import { fundFeeService } from "../../../funding/FungingSerivce";
 
 export class BaseCompoundV3Module extends Module {

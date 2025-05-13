@@ -3,8 +3,8 @@ import { fundFeeService } from "./funding/FungingSerivce";
 import { FundingBase } from "./funding/networks/FundingBase";
 import { FungingSapphire } from "./funding/networks/FundingSapphire";
 import { BaseCompoundV3Module } from "./modules/networks/base/BaseCompoundv3Module";
-import { OmniFarmingModule } from "./modules/OmniFarmingModule";
-import { OmniFarming } from "./OmniFarming";
+import { OmniFarmingModule } from "./omni-farming/OmniFarmingModule";
+import { OmniFarming } from "./omni-farming/OmniFarming";
 
 async function main() {
     const fungingSapphire = new FungingSapphire(AGENT_EVM_PRIVATE_KEY);
