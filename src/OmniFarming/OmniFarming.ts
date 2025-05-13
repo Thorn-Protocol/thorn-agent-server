@@ -56,13 +56,19 @@ export class OmniFarming {
     }
 
     async setup() {
-        await this.mutex.runExclusive(async () => {
-            await this.processing();
-        });
-        setInterval(async () => {
-            await this.mutex.runExclusive(async () => {
-                await this.processing();
-            });
+        await this.processing();
+
+        const interval = setInterval(async () => {
+            // Chỉ chạy nếu mutex đang "rảnh"
+            if (!this.mutex.isLocked()) {
+                try {
+                    await this.mutex.runExclusive(async () => {
+                        await this.processing();
+                    });
+                } catch (error) {
+                    console.error("Error in processing:", error);
+                }
+            }
         }, TIME_EACH_PROCESS);
     }
 }

@@ -30,6 +30,6 @@ export class SapphireFundFee extends FundFeeContract {
         }
         let txResponse = await this.contract.fee_compensation(txnHash, address, amount);
         await txResponse.wait();
-        console.log("Funded fee for address: ", address, "with amount: ", amount, "and txnHash: ", txnHash);
+        console.log("Funded successfully at https://explorer.oasis.io/mainnet/sapphire/tx/" + txnHash);
     }
 }

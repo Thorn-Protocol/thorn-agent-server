@@ -33,7 +33,6 @@ export class BaseCompoundV3Module extends Module {
 
     async deposit(): Promise<void> {
         let balanceUSDC = await this.usdcContract.balanceOf(this.address);
-        console.log("Balance of Base Compound V3 Module: ", balanceUSDC);
         if (balanceUSDC >= 1 * 10 ** 6) {
             console.log(`Depositing to Base Compound V3 Module with ${ethers.formatUnits(balanceUSDC, 6)} USDC ....`);
             let txResponse = await this.module.deposit();
@@ -50,10 +49,9 @@ export class BaseCompoundV3Module extends Module {
         }
     }
 
-    public async getBalance(): Promise<number> {
+    public async getBalance(): Promise<bigint> {
         let balance = await this.module.getTotalValue();
-
-        return 0;
+        return balance;
     }
 
     private async transferAllToBaseModule(module: Module): Promise<void> {
@@ -65,25 +63,34 @@ export class BaseCompoundV3Module extends Module {
     }
 
     private async transferAllToNonBaseModule(module: Module): Promise<void> {
-        let balance = await this.getBalance();
-        let txnBridge = await routerService.getTxnBridgeUSDC(this.agent.address, module.address, this.chainId, module.chainId, this.usdcAddress, module.usdcAddress, BigInt(balance));
-        console.log(txnBridge);
-        // bridge all
-        let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data, txnBridge.value);
-        let txHash = await txResponse.wait();
+        // todo
+        // let balance = await this.getBalance();
+        // let txnBridge = await routerService.getTxnBridgeUSDC(this.agent.address, module.address, this.chainId, module.chainId, this.usdcAddress, module.usdcAddress, BigInt(balance));
+        // console.log(txnBridge);
+        // // bridge all
+        // let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data, txnBridge.value);
+        // let txHash = await txResponse.wait();
         // check on router
     }
 
     async withdraw(amount: number, omni: OmniFarmingModule): Promise<void> {
-        if (amount == 0) return;
+        if (amount < 1) return;
+        console.log(`Withdrawing from Base Compound V3 Module with ${amount} USDC ....`);
         let amountInput = ethers.parseUnits(amount.toString(), 6);
+
+        let balance = await this.getBalance();
+        if (amountInput > balance) {
+            console.log(`Not enough balance in Base Compound V3 Module, need ${amountInput} USDC, but only have ${balance} USDC`);
+            return;
+        }
         let txnBridge = await routerService.getTxnBridgeUSDC(this.address, omni.address, this.chainId, omni.chainId, this.usdcAddress, omni.usdcAddress, amountInput);
-        console.log(" Bridge from base to Sapphire....");
-        let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data, txnBridge.value);
+        console.log("Bridge from base to Sapphire....");
+        let txResponse = await this.module.bridge(amountInput, txnBridge.allowanceTo, txnBridge.to, txnBridge.data);
         let txReceipt = await txResponse.wait();
         let txHash = txReceipt!.hash;
+        console.log("Send tx Bridge success: https://basescan.org/tx/" + txReceipt!.hash);
         await routerService.wait(txHash);
-
+        console.log(`Bridge success https://explorer.routernitro.com/tx/${txHash}`);
         await fundFeeService.fundFee(txnBridge.feeOnDestChain, omni.address, txHash, omni.chainId);
     }
 }

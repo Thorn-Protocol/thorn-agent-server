@@ -1,4 +1,4 @@
-export const TIME_EACH_PROCESS = 10 * 60 * 1000;
+export const TIME_EACH_PROCESS = 60 * 1000;
 
 export const NETWORK: any = {
     sapphire: {

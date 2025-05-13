@@ -7,7 +7,6 @@ export class RouterService {
     async getQuote(params: any) {
         const endpoint = "v2/quote";
         const quoteUrl = `${PATH_FINDER_API_URL}/${endpoint}`;
-        console.log({ params });
         try {
             const res = await axios.get(quoteUrl, { params });
             return res.data;
@@ -58,6 +57,14 @@ export class RouterService {
         let amountReceived = Number(ethers.formatUnits(txn.destination.tokenAmount, txn.destination.asset.decimals));
         let feeNumber = amountSend - amountReceived;
         let fee = ethers.parseUnits(feeNumber.toFixed(6), txn.destination.asset.decimals);
+        console.log(`
+--Bridge invoice--
+from: ${srcChain}
+to: ${destChain}
+amountSend: ${amountSend}
+amountReceived: ${amountReceived}
+fee: ${feeNumber.toFixed(6)}
+`);
         return {
             allowanceTo: txn.allowanceTo,
             to: txn.txn.to,

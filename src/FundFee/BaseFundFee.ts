@@ -20,8 +20,7 @@ export class BaseFundFee extends FundFeeContract {
     }
 
     async fundFee(amount: bigint, address: string, txnHash: string) {
-        console.log("Funding fee for address: ", address, "with amount: ", amount, "and txnHash: ", txnHash);
-
+        console.log("Funding bridge fee at Base Network: ", amount);
         let usdcContract = ERC20__factory.connect(this.usdcAddress, this.agent);
         let balance = await usdcContract.balanceOf(this.address);
         if (balance < amount) {
@@ -29,7 +28,7 @@ export class BaseFundFee extends FundFeeContract {
             return;
         }
         let txResponse = await this.contract.fee_compensation(txnHash, address, amount);
-        await txResponse.wait();
-        console.log("Funded fee for address: ", address, "with amount: ", amount, "and txnHash: ", txnHash);
+        let txReceipt = await txResponse.wait();
+        console.log("Funding success: https://basescan.org/tx/" + txReceipt!.hash);
     }
 }

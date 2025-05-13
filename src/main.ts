@@ -16,6 +16,8 @@ async function main() {
     const baseCompoundV3Module = new BaseCompoundV3Module(AGENT_EVM_PRIVATE_KEY);
     const omni = new OmniFarming(omniFarming);
     await omni.addModule(baseCompoundV3Module);
+
+    //console.log(" balance in module ", await baseCompoundV3Module.getBalance());
     await omni.setup();
 }
 
