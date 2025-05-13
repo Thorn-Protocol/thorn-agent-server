@@ -1,9 +1,10 @@
 import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
-import { ERC20__factory, FundFee, FundFee__factory } from "../typechain-types";
-import { FundFeeContract } from "./FundFeeContract";
-import { CHAIN_ID, EVM_ADDRESS, RPC } from "../common/config/config";
+import { ERC20__factory, FundFee, FundFee__factory } from "../../typechain-types";
 
-export class BaseFundFee extends FundFeeContract {
+import { CHAIN_ID, EVM_ADDRESS, RPC } from "../../common/config/config";
+import { FungingTemplate } from "../FundFeeContract";
+
+export class FundingBase extends FungingTemplate {
     public chainId: string = CHAIN_ID.base;
     private usdcAddress: string;
     private agent: Wallet;
@@ -19,7 +20,7 @@ export class BaseFundFee extends FundFeeContract {
         this.contract = FundFee__factory.connect(EVM_ADDRESS.base.fundFee, this.agent);
     }
 
-    async fundFee(amount: bigint, address: string, txnHash: string) {
+    async funding(amount: bigint, address: string, txnHash: string) {
         console.log("Funding bridge fee at Base Network: ", amount);
         let usdcContract = ERC20__factory.connect(this.usdcAddress, this.agent);
         let balance = await usdcContract.balanceOf(this.address);

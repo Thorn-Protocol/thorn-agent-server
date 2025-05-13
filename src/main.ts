@@ -1,16 +1,16 @@
 import { AGENT_EVM_PRIVATE_KEY } from "./common/config/secrets";
-import { BaseFundFee } from "./FundFee/BaseFundFee";
-import { fundFeeService } from "./FundFee/FundFeeService";
-import { SapphireFundFee } from "./FundFee/SapphireFundFee";
-import { BaseCompoundV3Module } from "./modules/BaseCompoundv3Module";
+import { fundFeeService } from "./funding/FungingSerivce";
+import { FundingBase } from "./funding/networks/FundingBase";
+import { FungingSapphire } from "./funding/networks/FundingSapphire";
+import { BaseCompoundV3Module } from "./modules/networks/base/BaseCompoundv3Module";
 import { OmniFarmingModule } from "./modules/OmniFarmingModule";
-import { OmniFarming } from "./OmniFarming/OmniFarming";
+import { OmniFarming } from "./OmniFarming";
 
 async function main() {
-    const sapphireFundFee = new SapphireFundFee(AGENT_EVM_PRIVATE_KEY);
-    const baseFundFee = new BaseFundFee(AGENT_EVM_PRIVATE_KEY);
-    await fundFeeService.addFundFeeContract(sapphireFundFee);
-    await fundFeeService.addFundFeeContract(baseFundFee);
+    const fungingSapphire = new FungingSapphire(AGENT_EVM_PRIVATE_KEY);
+    const fundingBase = new FundingBase(AGENT_EVM_PRIVATE_KEY);
+    await fundFeeService.addFunding(fungingSapphire);
+    await fundFeeService.addFunding(fundingBase);
 
     const omniFarming = new OmniFarmingModule(AGENT_EVM_PRIVATE_KEY);
     const baseCompoundV3Module = new BaseCompoundV3Module(AGENT_EVM_PRIVATE_KEY);

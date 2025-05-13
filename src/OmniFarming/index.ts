@@ -1,4 +1,3 @@
-import { Wallet } from "ethers";
 import { Module } from "../modules/Module";
 import { Mutex } from "async-mutex";
 import { OmniFarmingModule } from "../modules/OmniFarmingModule";
@@ -59,7 +58,6 @@ export class OmniFarming {
         await this.processing();
 
         const interval = setInterval(async () => {
-            // Chỉ chạy nếu mutex đang "rảnh"
             if (!this.mutex.isLocked()) {
                 try {
                     await this.mutex.runExclusive(async () => {

@@ -1,12 +1,12 @@
 import { ethers, JsonRpcProvider, Provider, Wallet } from "ethers";
-import { CHAIN_ID, EVM_ADDRESS, RPC } from "./../common/config/config";
-import { CompoundV3Module, CompoundV3Module__factory, ERC20, ERC20__factory } from "../typechain-types";
+import { CHAIN_ID, EVM_ADDRESS, RPC } from "../../../common/config/config";
+import { CompoundV3Module, CompoundV3Module__factory, ERC20, ERC20__factory } from "../../../typechain-types";
 
-import { Module } from "./Module";
-import { routerService } from "../bridge/RouterService";
-import { isProduction } from "../common/config/secrets";
-import { OmniFarmingModule } from "./OmniFarmingModule";
-import { fundFeeService } from "../FundFee/FundFeeService";
+import { Module } from "../../Module";
+import { routerService } from "../../../bridge/RouterService";
+import { isProduction } from "../../../common/config/secrets";
+import { OmniFarmingModule } from "../../OmniFarmingModule";
+import { fundFeeService } from "../../../funding/FungingSerivce";
 
 export class BaseCompoundV3Module extends Module {
     public name: string = "Base - Compound V3";

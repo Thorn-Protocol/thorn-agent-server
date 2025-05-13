@@ -6,7 +6,7 @@ import { CHAIN_ID, EVM_ADDRESS, RPC } from "../common/config/config";
 import { ERC20__factory, OmniFarming, OmniFarming__factory } from "../typechain-types";
 import { isProduction } from "../common/config/secrets";
 import { routerService } from "../bridge/RouterService";
-import { fundFeeService } from "../FundFee/FundFeeService";
+import { fundFeeService } from "../funding/FungingSerivce";
 
 export class OmniFarmingModule {
     public address: string = EVM_ADDRESS.sapphire.omniFarming;
