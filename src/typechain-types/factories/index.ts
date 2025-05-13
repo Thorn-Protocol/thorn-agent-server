@@ -6,4 +6,5 @@ export { CompoundV3Module__factory } from "./CompoundV3Module__factory";
 export { CompoundV3StakingUSDCModule__factory } from "./CompoundV3StakingUSDCModule__factory";
 export { ERC20__factory } from "./ERC20__factory";
 export { EVMTreasury__factory } from "./EVMTreasury__factory";
+export { FundFee__factory } from "./FundFee__factory";
 export { OmniFarming__factory } from "./OmniFarming__factory";

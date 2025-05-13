@@ -3,8 +3,10 @@ import { Provider } from "ethers";
 import { JsonRpcProvider } from "ethers";
 import { Module } from "./Module";
 import { CHAIN_ID, EVM_ADDRESS, RPC } from "../common/config/config";
-import { OmniFarming, OmniFarming__factory } from "../typechain-types";
+import { ERC20__factory, OmniFarming, OmniFarming__factory } from "../typechain-types";
 import { isProduction } from "../common/config/secrets";
+import { routerService } from "../bridge/RouterService";
+import { fundFeeService } from "../FundFee/FundFeeService";
 
 export class OmniFarmingModule {
     public address: string = EVM_ADDRESS.sapphire.omniFarming;
@@ -17,6 +19,7 @@ export class OmniFarmingModule {
     constructor(privateKeyAgent: string) {
         this.provider = new JsonRpcProvider(RPC.sapphire);
         this.agent = new Wallet(privateKeyAgent, this.provider);
+        console.log("Omni Farming address: ", this.agent.address);
         this.omnifarming = OmniFarming__factory.connect(EVM_ADDRESS.sapphire.omniFarming, this.agent);
     }
 
@@ -56,6 +59,7 @@ export class OmniFarmingModule {
             if (size > 0) {
                 let user = await this.omnifarming.listAccountWithdraw(0);
                 let txResponse = await this.withdrawForUser(user);
+
                 await this.checkAndWithdrawForUser();
             } else {
                 return;
@@ -71,21 +75,30 @@ export class OmniFarmingModule {
     }
 
     async WithdrawProcess() {
-        console.log("Withdraw process");
-        await this.enableWithdrawing();
-        await this.checkAndWithdrawForUser();
-        await this.disableWithdrawing();
-        console.log("Withdraw process done!!");
+        let size = await this.omnifarming.getWithdrawListLength();
+        if (size > 0) {
+            await this.enableWithdrawing();
+            await this.checkAndWithdrawForUser();
+            await this.disableWithdrawing();
+        }
     }
 
     async bridgeToModule(module: Module) {
-        // todo
-        console.log("Processing bridge from Omni Farming to module....");
-        if (isProduction) {
-            // todo call bridge here
-            // let txResponse = await this.omnifarming.bridge(module.address);
-            // await txResponse.wait();
+        let usdcContract = ERC20__factory.connect(this.usdcAddress, this.agent);
+        let balance = await usdcContract.balanceOf(this.address);
+        console.log("Balance of Omni Farming: ", balance);
+        if (balance > BigInt(5 * 10 ** 6)) {
+            console.log("Processing bridge from Omni Farming to module....");
+            let txnBridge = await routerService.getTxnBridgeUSDC(this.address, module.address, this.chainId, module.chainId, this.usdcAddress, module.usdcAddress, balance);
+            console.log("Transaction bridge: ", txnBridge);
+            let fakeTx = {};
+            let txResponse = await this.omnifarming.transferToTreasury(balance, txnBridge.allowanceTo, txnBridge.to, txnBridge.data);
+            let txReceipt = await txResponse.wait();
+            let txHash = txReceipt!.hash;
+            console.log("Transaction hash: ", txHash);
+            await routerService.wait(txHash);
+            await fundFeeService.fundFee(txnBridge.feeOnDestChain, module.address, txHash, module.chainId);
+            console.log("Bridge from Omni Farming to module success!!!");
         }
-        console.log("Bridge from Omni Farming to module success!!!");
     }
 }

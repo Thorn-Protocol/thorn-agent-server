@@ -36,7 +36,7 @@ export class RouterService {
         }
     };
 
-    async getTxnBridgeUSDC(from: string, to: string, srcChain: string, destChain: string, usdcSrc: string, usdcDest: string, amount: BigInt) {
+    async getTxnBridgeUSDC(from: string, to: string, srcChain: string, destChain: string, usdcSrc: string, usdcDest: string, amount: bigint) {
         const paramsQuote = {
             fromTokenAddress: usdcSrc,
             toTokenAddress: usdcDest,
@@ -60,11 +60,61 @@ export class RouterService {
         let fee = ethers.parseUnits(feeNumber.toFixed(6), txn.destination.asset.decimals);
         return {
             allowanceTo: txn.allowanceTo,
-            to: txn.txn.from,
+            to: txn.txn.to,
             data: txn.txn.data,
             value: txn.txn.value,
-            fee: fee,
+            feeOnDestChain: fee,
         };
+    }
+
+    async fetchStatus(txHash: string) {
+        const STATS_API_URL = "https://api-beta.pathfinder.routerprotocol.com/api/v2";
+        const url = `${STATS_API_URL}/status?srcTxHash=${txHash}`;
+        try {
+            const response = await axios.get(url);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching transaction status: ${error}`);
+            throw error;
+        }
+    }
+
+    async wait(txHash: string) {
+        await this.sleep(5000);
+        let data = await this.fetchStatus(txHash);
+        if (data.src_timestamp == null) {
+            return;
+        }
+
+        return new Promise(async (resolve, reject) => {
+            let data;
+            try {
+                data = await this.fetchStatus(txHash);
+                if (data.status === "completed") {
+                    resolve(data);
+                } else {
+                    const checkStatus = async () => {
+                        try {
+                            data = await this.fetchStatus(txHash);
+                            if (data.status === "completed") {
+                                resolve(data);
+                            } else {
+                                setTimeout(checkStatus, 5000);
+                            }
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                    checkStatus();
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async sleep(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 }
 

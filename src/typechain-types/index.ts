@@ -6,6 +6,7 @@ export type { CompoundV3Module } from "./CompoundV3Module";
 export type { CompoundV3StakingUSDCModule } from "./CompoundV3StakingUSDCModule";
 export type { ERC20 } from "./ERC20";
 export type { EVMTreasury } from "./EVMTreasury";
+export type { FundFee } from "./FundFee";
 export type { OmniFarming } from "./OmniFarming";
 export * as factories from "./factories";
 export { AAVELendingStakingUSDCModule__factory } from "./factories/AAVELendingStakingUSDCModule__factory";
@@ -13,4 +14,5 @@ export { CompoundV3Module__factory } from "./factories/CompoundV3Module__factory
 export { CompoundV3StakingUSDCModule__factory } from "./factories/CompoundV3StakingUSDCModule__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
 export { EVMTreasury__factory } from "./factories/EVMTreasury__factory";
+export { FundFee__factory } from "./factories/FundFee__factory";
 export { OmniFarming__factory } from "./factories/OmniFarming__factory";

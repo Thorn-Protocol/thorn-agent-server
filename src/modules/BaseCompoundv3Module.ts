@@ -6,6 +6,7 @@ import { Module } from "./Module";
 import { routerService } from "../bridge/RouterService";
 import { isProduction } from "../common/config/secrets";
 import { OmniFarmingModule } from "./OmniFarmingModule";
+import { fundFeeService } from "../FundFee/FundFeeService";
 
 export class BaseCompoundV3Module extends Module {
     public name: string = "Base - Compound V3";
@@ -31,11 +32,13 @@ export class BaseCompoundV3Module extends Module {
     }
 
     async deposit(): Promise<void> {
-        if (!isProduction) return;
-        let balance = await this.getBalance();
-        if (balance >= 10 * 10 ** 6) {
+        let balanceUSDC = await this.usdcContract.balanceOf(this.address);
+        console.log("Balance of Base Compound V3 Module: ", balanceUSDC);
+        if (balanceUSDC >= 1 * 10 ** 6) {
+            console.log(`Depositing to Base Compound V3 Module with ${ethers.formatUnits(balanceUSDC, 6)} USDC ....`);
             let txResponse = await this.module.deposit();
             await txResponse.wait();
+            console.log(`Depositing to Base Compound V3 Module success`);
         }
     }
 
@@ -73,13 +76,14 @@ export class BaseCompoundV3Module extends Module {
 
     async withdraw(amount: number, omni: OmniFarmingModule): Promise<void> {
         if (amount == 0) return;
-        if (!isProduction) return;
         let amountInput = ethers.parseUnits(amount.toString(), 6);
         let txnBridge = await routerService.getTxnBridgeUSDC(this.address, omni.address, this.chainId, omni.chainId, this.usdcAddress, omni.usdcAddress, amountInput);
-        console.log(txnBridge);
+        console.log(" Bridge from base to Sapphire....");
         let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data, txnBridge.value);
-        let txHash = await txResponse.wait();
-        // check on router
-        //
+        let txReceipt = await txResponse.wait();
+        let txHash = txReceipt!.hash;
+        await routerService.wait(txHash);
+
+        await fundFeeService.fundFee(txnBridge.feeOnDestChain, omni.address, txHash, omni.chainId);
     }
 }
