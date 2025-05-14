@@ -1,11 +1,10 @@
-import { ethers, parseUnits, Wallet } from "ethers";
+import { ethers, Wallet } from "ethers";
 import { Provider } from "ethers";
 import { JsonRpcProvider } from "ethers";
 import { Module } from "../modules/Module";
-import { CHAIN_ID, EVM_ADDRESS, RPC } from "../common/config/config";
+import { CHAIN_ID, EVM_ADDRESS, MIN_SWAP_AMOUNT, RPC } from "../common/config/config";
 import { ERC20__factory, OmniFarming, OmniFarming__factory } from "../typechain-types";
-import { isProduction } from "../common/config/secrets";
-import { routerService } from "../bridge/RouterService";
+import { routerService } from "../services/bridges/RouterService";
 import { fundFeeService } from "../funding/FungingSerivce";
 
 export class OmniFarmingModule {
@@ -24,12 +23,12 @@ export class OmniFarmingModule {
     }
 
     async getRate() {
-        const rate = await this.omnifarming.rate();
+        const rate = await this.omnifarming.lpToUsdcRate();
         return rate;
     }
 
     async getAmountNeedForWithdraw() {
-        const totalLpLocked = await this.omnifarming.totalSupplyLocked();
+        const totalLpLocked = await this.omnifarming.totalLockedLpSupply();
         const rate = await this.getRate();
         const amountNeedForWithdraw = (totalLpLocked * rate) / 10n ** 18n;
         let balanceUSDC = await ERC20__factory.connect(this.usdcAddress, this.agent).balanceOf(this.address);
@@ -42,40 +41,30 @@ export class OmniFarmingModule {
     }
 
     async checkAndWithdrawForUser() {
-        let size = await this.omnifarming.getWithdrawListLength();
-        if (size > 0) {
-            let user = await this.omnifarming.listAccountWithdraw(0);
-            let lpLocked = await this.omnifarming.balanceLocked(user);
+        let currentWithdrawalIndex = await this.omnifarming.currentWithdrawalIndex();
+        let totalWithdrawalRequests = await this.omnifarming.totalWithdrawalRequests();
+
+        if (currentWithdrawalIndex < totalWithdrawalRequests) {
+            let [user, lockedLp] = await this.omnifarming.getDataForNextWithdraw();
             let rate = await this.getRate();
-            let amountNeedForWithdraw = (lpLocked * rate) / 10n ** 18n;
+            let amountNeedForWithdraw = (lockedLp * rate) / 10n ** 18n;
             let balanceUSDC = await ERC20__factory.connect(this.usdcAddress, this.agent).balanceOf(this.address);
             if (balanceUSDC < amountNeedForWithdraw) {
                 console.log(`Agent: Not enough balance in Omni to withdraw for user ${user}, need ${ethers.formatUnits(amountNeedForWithdraw, 6)} USDC, but only have ${ethers.formatUnits(balanceUSDC, 6)} USDC`);
                 return;
             }
-            let txResponse = await this.omnifarming.withdrawForRequested(user);
+            let txResponse = await this.omnifarming.withdrawForRequested();
             let txReceipt = await txResponse.wait();
             let txHash = txReceipt!.hash;
-            console.log(`Agent: Withdraw for user ${user} success: https://https://explorer.oasis.io/mainnet/sapphire/tx/${txHash}`);
+            console.log(`Agent: Withdraw for requested ${currentWithdrawalIndex} success: https://explorer.oasis.io/mainnet/sapphire/tx/${txHash}`);
             await this.checkAndWithdrawForUser();
         } else {
             return;
         }
     }
 
-    async withdrawForUser(user: string) {
-        console.log("Withdraw for user: ", user);
-        let txResponse = await this.omnifarming.withdraw(user);
-        await txResponse.wait();
-        console.log("Withdraw for user success");
-    }
-
     async withdrawProcess() {
-        let size = await this.omnifarming.getWithdrawListLength();
-        if (size > 0) {
-            console.log(`Agent: There are ${size} withdraw requests`);
-            await this.checkAndWithdrawForUser();
-        }
+        await this.checkAndWithdrawForUser();
     }
 
     async getBalance() {
@@ -87,19 +76,19 @@ export class OmniFarmingModule {
         try {
             let usdcContract = ERC20__factory.connect(this.usdcAddress, this.agent);
             let balance = await usdcContract.balanceOf(this.address);
-            if (balance > BigInt(10 * 10 ** 6)) {
+            if (balance > BigInt(ethers.parseUnits(MIN_SWAP_AMOUNT.toString(), 6))) {
                 console.log("Processing bridge from Omni Farming to module....");
                 let txnBridge = await routerService.getTxnBridgeUSDC(this.address, module.address, this.chainId, module.chainId, this.usdcAddress, module.usdcAddress, balance);
                 let txResponse = await this.omnifarming.transferToTreasury(balance, txnBridge.allowanceTo, txnBridge.to, txnBridge.data);
                 let txReceipt = await txResponse.wait();
                 let txHash = txReceipt!.hash;
-                console.log("Bridge transaction: https://https://explorer.oasis.io/mainnet/sapphire/tx/" + txHash);
+                console.log("Bridge transaction: https://explorer.routernitro.com/tx/" + txHash);
                 await routerService.wait(txHash);
                 await fundFeeService.fundFee(txnBridge.feeOnDestChain, module.address, txHash, module.chainId);
                 console.log("Bridge from Omni Farming to module success!!!");
             }
-        } catch (error) {
-            console.log("Error bridge from Omni Farming to module: ", error);
+        } catch (error: any) {
+            console.log("Error bridge from Omni Farming to module: ", error.message);
         }
     }
 }

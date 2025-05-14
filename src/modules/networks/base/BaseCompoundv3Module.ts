@@ -1,12 +1,13 @@
 import { ethers, JsonRpcProvider, Provider, Wallet } from "ethers";
-import { CHAIN_ID, EVM_ADDRESS, RPC } from "../../../common/config/config";
+import { CHAIN_ID, EVM_ADDRESS, MIN_BALANCE_TO_DEPOSIT, RPC } from "../../../common/config/config";
 import { CompoundV3Module, CompoundV3Module__factory, ERC20, ERC20__factory } from "../../../typechain-types";
 
 import { Module } from "../../Module";
-import { routerService } from "../../../bridge/RouterService";
+import { routerService } from "../../../services/bridges/RouterService";
 import { isProduction } from "../../../common/config/secrets";
 import { OmniFarmingModule } from "../../../omni-farming/OmniFarmingModule";
 import { fundFeeService } from "../../../funding/FungingSerivce";
+import { centic } from "../../../services/data/CenticService";
 
 export class BaseCompoundV3Module extends Module {
     public name: string = "Base - Compound V3";
@@ -28,12 +29,12 @@ export class BaseCompoundV3Module extends Module {
 
     async getAPY(): Promise<number> {
         //todo call centic data
-        return 4.21;
+        return centic.getCompoundV3AprOnBase(EVM_ADDRESS.base.usdc);
     }
 
     async deposit(): Promise<void> {
         let balanceUSDC = await this.usdcContract.balanceOf(this.address);
-        if (balanceUSDC >= 1 * 10 ** 6) {
+        if (balanceUSDC >= ethers.parseUnits(MIN_BALANCE_TO_DEPOSIT.toString(), 6)) {
             console.log(`Depositing to Base Compound V3 Module with ${ethers.formatUnits(balanceUSDC, 6)} USDC ....`);
             let txResponse = await this.module.deposit();
             await txResponse.wait();

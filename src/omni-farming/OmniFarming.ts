@@ -29,9 +29,13 @@ export class OmniFarming {
             }
             let bestModule = this.modules[0];
             let bestAPY = await bestModule.getAPY();
+
             for (const module of this.modules) {
                 let apy = await module.getAPY();
-                if (apy >= bestAPY) {
+                if (apy >= bestAPY && module.chainId == bestModule.chainId) {
+                    bestModule = module;
+                    bestAPY = apy;
+                } else if (apy > bestAPY + 0.1 && module.chainId != bestModule.chainId) {
                     bestModule = module;
                     bestAPY = apy;
                 }
@@ -52,9 +56,13 @@ export class OmniFarming {
             console.log(error);
         }
     }
-
     async setup() {
+        // Sort modules by chainId
+        this.modules.sort((a: Module, b: Module) => a.chainId.localeCompare(b.chainId));
+
+        // Initial processing
         await this.processing();
+        // Set interval for periodic processing
         const interval = setInterval(async () => {
             if (!this.mutex.isLocked()) {
                 try {

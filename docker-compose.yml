@@ -1,0 +1,14 @@
+version: "3.8"
+name: omnifarming-rofl
+services:
+    server:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: ghoulouis/thorn-omnifarming-rofl:latest
+        container_name: v2-server
+        environment:
+            - IS_PRODUCT=true
+            - AGENT_EVM_PRIVATE_KEY=${AGENT_EVM_PRIVATE_KEY}
+            - CENTIC_API_KEYS=${CENTIC_API_KEYS}
+        restart: on-failure
