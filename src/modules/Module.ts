@@ -11,4 +11,6 @@ export abstract class Module {
     abstract deposit(): Promise<void>;
     abstract transferAllToModule(module: Module): Promise<void>;
     abstract withdraw(amountNeedForWithdraw: number, omnifarming: OmniFarmingModule): Promise<void>;
+
+    abstract getTotalValue(): Promise<number>;
 }

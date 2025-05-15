@@ -12,6 +12,8 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
+        "@oasisprotocol/sapphire-ethers-v6": "^6.0.1",
+        "@oasisprotocol/sapphire-paratime": "^1.1.0",
         "@typechain/ethers-v6": "^0.5.1",
         "async-mutex": "^0.5.0",
         "axios": "^1.9.0",

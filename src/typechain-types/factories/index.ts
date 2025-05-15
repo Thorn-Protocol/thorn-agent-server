@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export { AAVELendingStakingUSDCModule__factory } from "./AAVELendingStakingUSDCModule__factory";
+export { AAVEV3Module__factory } from "./AAVEV3Module__factory";
 export { CompoundV3Module__factory } from "./CompoundV3Module__factory";
 export { CompoundV3StakingUSDCModule__factory } from "./CompoundV3StakingUSDCModule__factory";
 export { ERC20__factory } from "./ERC20__factory";

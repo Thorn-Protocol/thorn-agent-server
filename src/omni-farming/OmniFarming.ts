@@ -21,6 +21,19 @@ export class OmniFarming {
         }
     }
 
+    async updateRate() {
+        let totalValue = 0;
+
+        for (const module of this.modules) {
+            let value = await module.getTotalValue();
+            totalValue += value;
+        }
+
+        totalValue += await this.omnifarming.getTotalValue();
+
+        await this.omnifarming.updateRate(totalValue);
+    }
+
     async processing() {
         try {
             if (this.bestModule == null) {
@@ -49,6 +62,7 @@ export class OmniFarming {
             }
             let amountUSDCNeedBridgeForWithdraw = await this.omnifarming.getAmountNeedForWithdraw();
             await this.bestModule.withdraw(amountUSDCNeedBridgeForWithdraw, this.omnifarming);
+            await this.updateRate();
             await this.omnifarming.withdrawProcess();
             await this.omnifarming.bridgeToModule(bestModule);
             await bestModule.deposit();
