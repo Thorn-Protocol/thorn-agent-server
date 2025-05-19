@@ -1,4 +1,4 @@
-import { AGENT_EVM_PRIVATE_KEY } from "./common/config/secrets";
+import { AGENT_EVM_PRIVATE_KEY, IN_ROFL } from "./common/config/secrets";
 import { fundFeeService } from "./funding/FungingSerivce";
 import { FundingBase } from "./funding/networks/FundingBase";
 import { FungingSapphire } from "./funding/networks/FundingSapphire";
@@ -9,18 +9,23 @@ import { centic } from "./services/data/CenticService";
 import { EVM_ADDRESS } from "./common/config/config";
 import { FundingArbitrum } from "./funding/networks/FundingArbitrum";
 import { ArbitrumAAVEV3Module } from "./modules/networks/arbitrum/ArbitrumAAVEV3Module";
+import { routerService } from "./services/bridges/RouterService";
 
 async function main() {
-    const fungingSapphire = new FungingSapphire(AGENT_EVM_PRIVATE_KEY);
-    const fundingBase = new FundingBase(AGENT_EVM_PRIVATE_KEY);
-    const fundingArbitrum = new FundingArbitrum(AGENT_EVM_PRIVATE_KEY);
+    let privateKey = AGENT_EVM_PRIVATE_KEY;
+
+    if (IN_ROFL) {
+    }
+
+    const fungingSapphire = new FungingSapphire(privateKey);
+    const fundingBase = new FundingBase(privateKey);
+    const fundingArbitrum = new FundingArbitrum(privateKey);
     await fundFeeService.addFunding(fungingSapphire);
     await fundFeeService.addFunding(fundingBase);
     await fundFeeService.addFunding(fundingArbitrum);
-
-    const omniFarming = new OmniFarmingModule(AGENT_EVM_PRIVATE_KEY);
-    const baseCompoundV3Module = new BaseCompoundV3Module(AGENT_EVM_PRIVATE_KEY);
-    const arbitrumAAVEV3Module = new ArbitrumAAVEV3Module(AGENT_EVM_PRIVATE_KEY);
+    const omniFarming = new OmniFarmingModule(privateKey);
+    const baseCompoundV3Module = new BaseCompoundV3Module(privateKey);
+    const arbitrumAAVEV3Module = new ArbitrumAAVEV3Module(privateKey);
     const omni = new OmniFarming(omniFarming);
     await omni.addModule(baseCompoundV3Module);
     await omni.addModule(arbitrumAAVEV3Module);

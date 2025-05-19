@@ -28,9 +28,7 @@ export class ArbitrumAAVEV3Module extends Module {
     }
 
     async getAPY(): Promise<number> {
-        //todo call centic data
-        return 1;
-        return centic.getCompoundV3AprOnBase(EVM_ADDRESS.base.usdc);
+        return centic.getAAVEV3AprOnArbitrum(EVM_ADDRESS.arbitrum.usdc);
     }
 
     async deposit(): Promise<void> {
@@ -81,8 +79,13 @@ export class ArbitrumAAVEV3Module extends Module {
     }
 
     async getTotalValue(): Promise<number> {
-        let balance = await this.module.getTotalValue();
-        return Number(Number(ethers.formatUnits(balance, 6)).toFixed(6));
+        try {
+            let balance = await this.module.getTotalValue();
+            return Number(ethers.formatUnits(balance, 6));
+        } catch (error) {
+            console.log("Error get total value: ", error);
+            return 0;
+        }
     }
 
     async withdraw(amount: number, omni: OmniFarmingModule): Promise<void> {

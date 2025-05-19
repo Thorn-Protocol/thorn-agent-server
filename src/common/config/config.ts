@@ -1,6 +1,6 @@
 export const MIN_BRIDGE_AMOUNT = 4; // 5 $
 export const MIN_BALANCE_TO_DEPOSIT = 1; // 2 $
-export const TIME_EACH_PROCESS = 15 * 60 * 1000;
+export const TIME_EACH_PROCESS = 30 * 60 * 1000;
 
 export const CHAIN_ID: any = {
     sapphire: "23294",
@@ -11,7 +11,7 @@ export const CHAIN_ID: any = {
 export const RPC: any = {
     base: "https://base.llamarpc.com",
     sapphire: "https://sapphire.oasis.io/",
-    arbitrum: "https://1rpc.io/arb",
+    arbitrum: "https://arb1.arbitrum.io/rpc",
 };
 
 export const EVM_ADDRESS = {

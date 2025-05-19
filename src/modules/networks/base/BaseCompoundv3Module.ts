@@ -56,7 +56,6 @@ export class BaseCompoundV3Module extends Module {
     }
 
     private async transferAllToBaseModule(module: Module): Promise<void> {
-        if (!isProduction) return;
         if (module.address == this.address) return;
         let balance = await this.module.getTotalValue();
         let txResponse = await this.module.transfer(module.address, balance);
@@ -64,19 +63,31 @@ export class BaseCompoundV3Module extends Module {
     }
 
     private async transferAllToNonBaseModule(module: Module): Promise<void> {
-        let balance = await this.getBalance();
-        if (balance < ethers.parseUnits(MIN_BRIDGE_AMOUNT.toString(), 6)) return;
-        console.log(`Bridge from ${this.name} to ${module.name} with ${ethers.formatUnits(balance, 6)} USDC ....`);
-        let txnBridge = await routerService.getTxnBridgeUSDC(this.agent.address, module.address, this.chainId, module.chainId, this.usdcAddress, module.usdcAddress, BigInt(balance));
-        console.log(txnBridge);
-        // // bridge all
-        let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data, txnBridge.value);
-        let txReceipt = await txResponse.wait();
-        let txHash = txReceipt!.hash;
-        console.log("Send tx Bridge success: https://explorer.routernitro.com/tx/" + txReceipt!.hash);
-        await routerService.wait(txHash);
-        console.log(`Bridge success https://explorer.routernitro.com/tx/${txHash}`);
-        await fundFeeService.fundFee(txnBridge.feeOnDestChain, module.address, txHash, module.chainId);
+        try {
+            let balance = await this.getBalance();
+            console.log(balance);
+            if (balance < ethers.parseUnits(MIN_BRIDGE_AMOUNT.toString(), 6)) return;
+            console.log(`Bridge from ${this.name} to ${module.name} with ${ethers.formatUnits(balance, 6)} USDC ....`);
+            let txnBridge = await routerService.getTxnBridgeUSDC(this.agent.address, module.address, this.chainId, module.chainId, this.usdcAddress, module.usdcAddress, BigInt(balance));
+            if (txnBridge.feeData.symbol == "ETH") {
+                let amount = BigInt(txnBridge.feeData.amount);
+                let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data, { value: amount });
+                let txReceipt = await txResponse.wait();
+                let txHash = txReceipt!.hash;
+                console.log("Send tx Bridge success: https://explorer.routernitro.com/tx/" + txReceipt!.hash);
+                await routerService.wait(txHash);
+                return;
+            }
+            let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data);
+            let txReceipt = await txResponse.wait();
+            let txHash = txReceipt!.hash;
+            console.log("Send tx Bridge success: https://explorer.routernitro.com/tx/" + txReceipt!.hash);
+            await routerService.wait(txHash);
+            console.log(`Bridge success https://explorer.routernitro.com/tx/${txHash}`);
+            await fundFeeService.fundFee(txnBridge.feeOnDestChain, module.address, txHash, module.chainId);
+        } catch (error) {
+            console.log(" Error when transfer", error);
+        }
     }
 
     async getTotalValue(): Promise<number> {
@@ -88,7 +99,6 @@ export class BaseCompoundV3Module extends Module {
         if (amount < MIN_BRIDGE_AMOUNT) return;
         console.log(`Withdrawing from Base Compound V3 Module with ${amount} USDC ....`);
         let amountInput = ethers.parseUnits(amount.toString(), 6);
-
         let balance = await this.getBalance();
         if (amountInput > balance) {
             console.log(`Not enough balance in Base Compound V3 Module, need ${amountInput} USDC, but only have ${balance} USDC`);

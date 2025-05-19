@@ -2,6 +2,7 @@ import { Module } from "../modules/Module";
 import { Mutex } from "async-mutex";
 import { OmniFarmingModule } from "./OmniFarmingModule";
 import { TIME_EACH_PROCESS } from "../common/config/config";
+import { routerService } from "../services/bridges/RouterService";
 
 export class OmniFarming {
     private omnifarming: OmniFarmingModule;
@@ -22,16 +23,20 @@ export class OmniFarming {
     }
 
     async updateRate() {
-        let totalValue = 0;
+        try {
+            let totalValue = 0;
 
-        for (const module of this.modules) {
-            let value = await module.getTotalValue();
-            totalValue += value;
+            for (const module of this.modules) {
+                let value = await module.getTotalValue();
+                totalValue += value;
+            }
+
+            totalValue += await this.omnifarming.getTotalValue();
+            totalValue += await routerService.getBalanceBridging("0xc378E3e2304476bf4c2fBf3204535236F7628B7A");
+            await this.omnifarming.updateRate(totalValue);
+        } catch (error) {
+            console.log("Error update rate: ", error);
         }
-
-        totalValue += await this.omnifarming.getTotalValue();
-
-        await this.omnifarming.updateRate(totalValue);
     }
 
     async processing() {
@@ -41,28 +46,35 @@ export class OmniFarming {
                 return;
             }
             let bestModule = this.modules[0];
-            let bestAPY = await bestModule.getAPY();
-
-            for (const module of this.modules) {
-                let apy = await module.getAPY();
-                if (apy >= bestAPY && module.chainId == bestModule.chainId) {
-                    bestModule = module;
-                    bestAPY = apy;
-                } else if (apy > bestAPY + 0.1 && module.chainId != bestModule.chainId) {
-                    bestModule = module;
-                    bestAPY = apy;
+            let bestAPY;
+            try {
+                bestAPY = await bestModule.getAPY();
+                for (const module of this.modules) {
+                    let apy = await module.getAPY();
+                    if (apy >= bestAPY && module.chainId == bestModule.chainId) {
+                        bestModule = module;
+                        bestAPY = apy;
+                    } else if (apy > bestAPY + 0.1 && module.chainId != bestModule.chainId) {
+                        bestModule = module;
+                        bestAPY = apy;
+                    }
                 }
-            }
-            if (bestModule != this.bestModule) {
-                this.bestModule = bestModule;
-                console.log(`Best module update: ${bestModule.name} with APY: ${bestAPY}`);
+
+                console.log(bestModule.name, bestAPY);
+                if (bestModule != this.bestModule) {
+                    this.bestModule = bestModule;
+                    console.log(`Best module update: ${bestModule.name} with APY: ${bestAPY}`);
+                }
                 for (const module of this.modules) {
                     await module.transferAllToModule(bestModule);
                 }
+                let amountUSDCNeedBridgeForWithdraw = await this.omnifarming.getAmountNeedForWithdraw();
+                await this.bestModule.withdraw(amountUSDCNeedBridgeForWithdraw, this.omnifarming);
+            } catch (error) {
+                console.log("Error processing: ", error);
             }
-            let amountUSDCNeedBridgeForWithdraw = await this.omnifarming.getAmountNeedForWithdraw();
-            await this.bestModule.withdraw(amountUSDCNeedBridgeForWithdraw, this.omnifarming);
             await this.updateRate();
+
             await this.omnifarming.withdrawProcess();
             await this.omnifarming.bridgeToModule(bestModule);
             await bestModule.deposit();

@@ -26,34 +26,66 @@ import type {
 export interface CompoundV3ModuleInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "agent"
+      | "owner"
+      | "supportsInterface"
+      | "transferOwnership"
+      | "upgradeTo"
+      | "upgradeToAndCall"
+      | "BPS_BASE"
       | "bridge"
       | "bridgeAll"
       | "changeAgent"
       | "changeGovernance"
       | "comet"
       | "deposit"
+      | "feeRecipient"
+      | "getLastDeposited"
+      | "getPerformanceFeeBps"
       | "getTotalValue"
-      | "governance"
       | "governanceExec"
+      | "initialize"
+      | "lastDeposited"
+      | "pause"
       | "paused"
+      | "performanceFeeBps"
+      | "setPerformanceFeeBps"
       | "transfer"
+      | "unpause"
       | "usdc"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "OwnershipTransferred"
+      | "ProxyImplementationUpdated"
       | "AgentChanged"
-      | "CometChanged"
       | "Deposited"
+      | "FeeSent"
       | "GovernanceChanged"
-      | "GovernmentChanged"
+      | "Initialized"
       | "Paused"
       | "Unpaused"
       | "Withdrawn"
   ): EventFragment;
 
-  encodeFunctionData(functionFragment: "agent", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "supportsInterface",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "upgradeTo",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "upgradeToAndCall",
+    values: [AddressLike, BytesLike]
+  ): string;
+  encodeFunctionData(functionFragment: "BPS_BASE", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "bridge",
     values: [BigNumberish, AddressLike, AddressLike, BytesLike]
@@ -73,25 +105,72 @@ export interface CompoundV3ModuleInterface extends Interface {
   encodeFunctionData(functionFragment: "comet", values?: undefined): string;
   encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "getTotalValue",
+    functionFragment: "feeRecipient",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "governance",
+    functionFragment: "getLastDeposited",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPerformanceFeeBps",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getTotalValue",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "governanceExec",
     values: [AddressLike[], BigNumberish[], BytesLike[]]
   ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [
+      AddressLike,
+      AddressLike,
+      AddressLike,
+      AddressLike,
+      AddressLike,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lastDeposited",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "performanceFeeBps",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setPerformanceFeeBps",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "transfer",
     values: [AddressLike, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(functionFragment: "usdc", values?: undefined): string;
 
-  decodeFunctionResult(functionFragment: "agent", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "upgradeTo", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeToAndCall",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "BPS_BASE", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "bridge", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "bridgeAll", data: BytesLike): Result;
   decodeFunctionResult(
@@ -105,17 +184,75 @@ export interface CompoundV3ModuleInterface extends Interface {
   decodeFunctionResult(functionFragment: "comet", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "feeRecipient",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getLastDeposited",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPerformanceFeeBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getTotalValue",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "governanceExec",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lastDeposited",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "performanceFeeBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setPerformanceFeeBps",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "usdc", data: BytesLike): Result;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ProxyImplementationUpdatedEvent {
+  export type InputTuple = [
+    previousImplementation: AddressLike,
+    newImplementation: AddressLike
+  ];
+  export type OutputTuple = [
+    previousImplementation: string,
+    newImplementation: string
+  ];
+  export interface OutputObject {
+    previousImplementation: string;
+    newImplementation: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace AgentChangedEvent {
@@ -131,12 +268,11 @@ export namespace AgentChangedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace CometChangedEvent {
-  export type InputTuple = [oldComet: AddressLike, newComet: AddressLike];
-  export type OutputTuple = [oldComet: string, newComet: string];
+export namespace DepositedEvent {
+  export type InputTuple = [amount: BigNumberish];
+  export type OutputTuple = [amount: bigint];
   export interface OutputObject {
-    oldComet: string;
-    newComet: string;
+    amount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -144,7 +280,7 @@ export namespace CometChangedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace DepositedEvent {
+export namespace FeeSentEvent {
   export type InputTuple = [amount: BigNumberish];
   export type OutputTuple = [amount: bigint];
   export interface OutputObject {
@@ -172,15 +308,11 @@ export namespace GovernanceChangedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace GovernmentChangedEvent {
-  export type InputTuple = [
-    oldGovernment: AddressLike,
-    newGovernment: AddressLike
-  ];
-  export type OutputTuple = [oldGovernment: string, newGovernment: string];
+export namespace InitializedEvent {
+  export type InputTuple = [version: BigNumberish];
+  export type OutputTuple = [version: bigint];
   export interface OutputObject {
-    oldGovernment: string;
-    newGovernment: string;
+    version: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -267,7 +399,29 @@ export interface CompoundV3Module extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  agent: TypedContractMethod<[], [string], "view">;
+  owner: TypedContractMethod<[], [string], "view">;
+
+  supportsInterface: TypedContractMethod<[id: BytesLike], [boolean], "view">;
+
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  upgradeTo: TypedContractMethod<
+    [newImplementation: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  upgradeToAndCall: TypedContractMethod<
+    [newImplementation: AddressLike, data: BytesLike],
+    [void],
+    "payable"
+  >;
+
+  BPS_BASE: TypedContractMethod<[], [bigint], "view">;
 
   bridge: TypedContractMethod<
     [
@@ -277,7 +431,7 @@ export interface CompoundV3Module extends BaseContract {
       txnBridgeData: BytesLike
     ],
     [void],
-    "nonpayable"
+    "payable"
   >;
 
   bridgeAll: TypedContractMethod<
@@ -287,7 +441,7 @@ export interface CompoundV3Module extends BaseContract {
       txnBridgeData: BytesLike
     ],
     [void],
-    "nonpayable"
+    "payable"
   >;
 
   changeAgent: TypedContractMethod<[_agent: AddressLike], [void], "nonpayable">;
@@ -302,9 +456,13 @@ export interface CompoundV3Module extends BaseContract {
 
   deposit: TypedContractMethod<[], [void], "nonpayable">;
 
-  getTotalValue: TypedContractMethod<[], [bigint], "view">;
+  feeRecipient: TypedContractMethod<[], [string], "view">;
 
-  governance: TypedContractMethod<[], [string], "view">;
+  getLastDeposited: TypedContractMethod<[], [bigint], "view">;
+
+  getPerformanceFeeBps: TypedContractMethod<[], [bigint], "view">;
+
+  getTotalValue: TypedContractMethod<[], [bigint], "view">;
 
   governanceExec: TypedContractMethod<
     [target: AddressLike[], value: BigNumberish[], data: BytesLike[]],
@@ -312,16 +470,40 @@ export interface CompoundV3Module extends BaseContract {
     "nonpayable"
   >;
 
-  /**
-   * Returns true if the contract is paused, and false otherwise.
-   */
+  initialize: TypedContractMethod<
+    [
+      _government: AddressLike,
+      _agent: AddressLike,
+      _feeRecipient: AddressLike,
+      _usdc: AddressLike,
+      _comet: AddressLike,
+      _performanceFeeBps: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
+
+  lastDeposited: TypedContractMethod<[], [bigint], "view">;
+
+  pause: TypedContractMethod<[], [void], "nonpayable">;
+
   paused: TypedContractMethod<[], [boolean], "view">;
+
+  performanceFeeBps: TypedContractMethod<[], [bigint], "view">;
+
+  setPerformanceFeeBps: TypedContractMethod<
+    [_performanceFeeBps: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
 
   transfer: TypedContractMethod<
     [to: AddressLike, amount: BigNumberish],
     [void],
     "nonpayable"
   >;
+
+  unpause: TypedContractMethod<[], [void], "nonpayable">;
 
   usdc: TypedContractMethod<[], [string], "view">;
 
@@ -330,8 +512,31 @@ export interface CompoundV3Module extends BaseContract {
   ): T;
 
   getFunction(
-    nameOrSignature: "agent"
+    nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "supportsInterface"
+  ): TypedContractMethod<[id: BytesLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "upgradeTo"
+  ): TypedContractMethod<
+    [newImplementation: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "upgradeToAndCall"
+  ): TypedContractMethod<
+    [newImplementation: AddressLike, data: BytesLike],
+    [void],
+    "payable"
+  >;
+  getFunction(
+    nameOrSignature: "BPS_BASE"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "bridge"
   ): TypedContractMethod<
@@ -342,7 +547,7 @@ export interface CompoundV3Module extends BaseContract {
       txnBridgeData: BytesLike
     ],
     [void],
-    "nonpayable"
+    "payable"
   >;
   getFunction(
     nameOrSignature: "bridgeAll"
@@ -353,7 +558,7 @@ export interface CompoundV3Module extends BaseContract {
       txnBridgeData: BytesLike
     ],
     [void],
-    "nonpayable"
+    "payable"
   >;
   getFunction(
     nameOrSignature: "changeAgent"
@@ -368,11 +573,17 @@ export interface CompoundV3Module extends BaseContract {
     nameOrSignature: "deposit"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "getTotalValue"
+    nameOrSignature: "feeRecipient"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "getLastDeposited"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "governance"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: "getPerformanceFeeBps"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getTotalValue"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "governanceExec"
   ): TypedContractMethod<
@@ -381,8 +592,38 @@ export interface CompoundV3Module extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "initialize"
+  ): TypedContractMethod<
+    [
+      _government: AddressLike,
+      _agent: AddressLike,
+      _feeRecipient: AddressLike,
+      _usdc: AddressLike,
+      _comet: AddressLike,
+      _performanceFeeBps: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "lastDeposited"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "pause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "paused"
   ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "performanceFeeBps"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "setPerformanceFeeBps"
+  ): TypedContractMethod<
+    [_performanceFeeBps: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "transfer"
   ): TypedContractMethod<
@@ -391,22 +632,32 @@ export interface CompoundV3Module extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "unpause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "usdc"
   ): TypedContractMethod<[], [string], "view">;
 
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
+  >;
+  getEvent(
+    key: "ProxyImplementationUpdated"
+  ): TypedContractEvent<
+    ProxyImplementationUpdatedEvent.InputTuple,
+    ProxyImplementationUpdatedEvent.OutputTuple,
+    ProxyImplementationUpdatedEvent.OutputObject
+  >;
   getEvent(
     key: "AgentChanged"
   ): TypedContractEvent<
     AgentChangedEvent.InputTuple,
     AgentChangedEvent.OutputTuple,
     AgentChangedEvent.OutputObject
-  >;
-  getEvent(
-    key: "CometChanged"
-  ): TypedContractEvent<
-    CometChangedEvent.InputTuple,
-    CometChangedEvent.OutputTuple,
-    CometChangedEvent.OutputObject
   >;
   getEvent(
     key: "Deposited"
@@ -416,6 +667,13 @@ export interface CompoundV3Module extends BaseContract {
     DepositedEvent.OutputObject
   >;
   getEvent(
+    key: "FeeSent"
+  ): TypedContractEvent<
+    FeeSentEvent.InputTuple,
+    FeeSentEvent.OutputTuple,
+    FeeSentEvent.OutputObject
+  >;
+  getEvent(
     key: "GovernanceChanged"
   ): TypedContractEvent<
     GovernanceChangedEvent.InputTuple,
@@ -423,11 +681,11 @@ export interface CompoundV3Module extends BaseContract {
     GovernanceChangedEvent.OutputObject
   >;
   getEvent(
-    key: "GovernmentChanged"
+    key: "Initialized"
   ): TypedContractEvent<
-    GovernmentChangedEvent.InputTuple,
-    GovernmentChangedEvent.OutputTuple,
-    GovernmentChangedEvent.OutputObject
+    InitializedEvent.InputTuple,
+    InitializedEvent.OutputTuple,
+    InitializedEvent.OutputObject
   >;
   getEvent(
     key: "Paused"
@@ -452,6 +710,28 @@ export interface CompoundV3Module extends BaseContract {
   >;
 
   filters: {
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+
+    "ProxyImplementationUpdated(address,address)": TypedContractEvent<
+      ProxyImplementationUpdatedEvent.InputTuple,
+      ProxyImplementationUpdatedEvent.OutputTuple,
+      ProxyImplementationUpdatedEvent.OutputObject
+    >;
+    ProxyImplementationUpdated: TypedContractEvent<
+      ProxyImplementationUpdatedEvent.InputTuple,
+      ProxyImplementationUpdatedEvent.OutputTuple,
+      ProxyImplementationUpdatedEvent.OutputObject
+    >;
+
     "AgentChanged(address,address)": TypedContractEvent<
       AgentChangedEvent.InputTuple,
       AgentChangedEvent.OutputTuple,
@@ -461,17 +741,6 @@ export interface CompoundV3Module extends BaseContract {
       AgentChangedEvent.InputTuple,
       AgentChangedEvent.OutputTuple,
       AgentChangedEvent.OutputObject
-    >;
-
-    "CometChanged(address,address)": TypedContractEvent<
-      CometChangedEvent.InputTuple,
-      CometChangedEvent.OutputTuple,
-      CometChangedEvent.OutputObject
-    >;
-    CometChanged: TypedContractEvent<
-      CometChangedEvent.InputTuple,
-      CometChangedEvent.OutputTuple,
-      CometChangedEvent.OutputObject
     >;
 
     "Deposited(uint256)": TypedContractEvent<
@@ -485,6 +754,17 @@ export interface CompoundV3Module extends BaseContract {
       DepositedEvent.OutputObject
     >;
 
+    "FeeSent(uint256)": TypedContractEvent<
+      FeeSentEvent.InputTuple,
+      FeeSentEvent.OutputTuple,
+      FeeSentEvent.OutputObject
+    >;
+    FeeSent: TypedContractEvent<
+      FeeSentEvent.InputTuple,
+      FeeSentEvent.OutputTuple,
+      FeeSentEvent.OutputObject
+    >;
+
     "GovernanceChanged(address,address)": TypedContractEvent<
       GovernanceChangedEvent.InputTuple,
       GovernanceChangedEvent.OutputTuple,
@@ -496,15 +776,15 @@ export interface CompoundV3Module extends BaseContract {
       GovernanceChangedEvent.OutputObject
     >;
 
-    "GovernmentChanged(address,address)": TypedContractEvent<
-      GovernmentChangedEvent.InputTuple,
-      GovernmentChangedEvent.OutputTuple,
-      GovernmentChangedEvent.OutputObject
+    "Initialized(uint64)": TypedContractEvent<
+      InitializedEvent.InputTuple,
+      InitializedEvent.OutputTuple,
+      InitializedEvent.OutputObject
     >;
-    GovernmentChanged: TypedContractEvent<
-      GovernmentChangedEvent.InputTuple,
-      GovernmentChangedEvent.OutputTuple,
-      GovernmentChangedEvent.OutputObject
+    Initialized: TypedContractEvent<
+      InitializedEvent.InputTuple,
+      InitializedEvent.OutputTuple,
+      InitializedEvent.OutputObject
     >;
 
     "Paused(address)": TypedContractEvent<
