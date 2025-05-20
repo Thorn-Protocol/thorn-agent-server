@@ -1,12 +1,6 @@
-version: "3.8"
-name: omnifarming-rofl
 services:
-    server:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        image: ghoulouis/thorn-omnifarming-rofl
-        container_name: v2-server
+    omnifarming-rofl:
+        image: "docker.io/ghoulouis/thorn-omnifarming-rofl"
         environment:
             - IN_ROFL=${IN_ROFL}
             - AGENT_EVM_PRIVATE_KEY=${AGENT_EVM_PRIVATE_KEY}
@@ -14,4 +8,3 @@ services:
             - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
             - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
             - TELEGRAM_GROUP_ID=${TELEGRAM_GROUP_ID}
-        restart: on-failure

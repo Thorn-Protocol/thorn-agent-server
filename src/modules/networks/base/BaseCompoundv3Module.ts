@@ -4,7 +4,6 @@ import { CompoundV3Module, CompoundV3Module__factory, ERC20, ERC20__factory } fr
 
 import { Module } from "../../Module";
 import { routerService } from "../../../services/bridges/RouterService";
-import { isProduction } from "../../../common/config/secrets";
 import { OmniFarmingModule } from "../../../omni-farming/OmniFarmingModule";
 import { fundFeeService } from "../../../funding/FungingSerivce";
 import { centic } from "../../../services/data/CenticService";

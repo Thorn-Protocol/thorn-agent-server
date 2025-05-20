@@ -4,7 +4,6 @@ import { AAVEV3Module, AAVEV3Module__factory, CompoundV3Module__factory, ERC20, 
 
 import { Module } from "../../Module";
 import { routerService } from "../../../services/bridges/RouterService";
-import { isProduction } from "../../../common/config/secrets";
 import { OmniFarmingModule } from "../../../omni-farming/OmniFarmingModule";
 import { fundFeeService } from "../../../funding/FungingSerivce";
 import { centic } from "../../../services/data/CenticService";
@@ -42,7 +41,7 @@ export class ArbitrumAAVEV3Module extends Module {
     }
 
     async transferAllToModule(module: Module): Promise<void> {
-        if (module.chainId != CHAIN_ID.base) {
+        if (module.chainId != CHAIN_ID.arbitrum) {
             return this.transferAllToNonArbitrumModule(module);
         } else {
             return this.transferAllToArbitrumModule(module);
@@ -55,7 +54,6 @@ export class ArbitrumAAVEV3Module extends Module {
     }
 
     private async transferAllToArbitrumModule(module: Module): Promise<void> {
-        if (!isProduction) return;
         if (module.address == this.address) return;
         let balance = await this.module.getTotalValue();
         let txResponse = await this.module.transfer(module.address, balance);

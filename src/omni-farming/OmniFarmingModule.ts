@@ -41,6 +41,8 @@ export class OmniFarmingModule {
     async updateRate(totalValue: number) {
         const totalLpSupply = await this.getTotalLp();
         const value = ethers.parseUnits(totalValue.toFixed(6), 6);
+        console.log("Total lp supply: ", totalLpSupply);
+        console.log("Value: ", value);
         const rate = (totalLpSupply * 10n ** 18n) / value;
         const oldRate = await this.getRate();
         //if (rate >= oldRate) return;
@@ -63,7 +65,7 @@ export class OmniFarmingModule {
         if (balanceUSDC >= amountNeedForWithdraw) {
             return 0;
         } else {
-            let result = Number(ethers.formatUnits(((amountNeedForWithdraw - balanceUSDC) * 105n) / 100n, 6));
+            let result = Number(ethers.formatUnits(amountNeedForWithdraw - balanceUSDC, 6));
             return result;
         }
     }
@@ -71,7 +73,8 @@ export class OmniFarmingModule {
     async checkAndWithdrawForUser() {
         let currentWithdrawalIndex = await this.omnifarming.currentWithdrawalIndex();
         let totalWithdrawalRequests = await this.omnifarming.totalWithdrawalRequests();
-
+        console.log("Current withdrawal index: ", currentWithdrawalIndex);
+        console.log("Total withdrawal requests: ", totalWithdrawalRequests);
         if (currentWithdrawalIndex < totalWithdrawalRequests) {
             let [user, lockedLp] = await this.omnifarming.getDataForNextWithdraw();
             let rate = await this.getRate();

@@ -1,47 +1,50 @@
 name: thorn-omnifarming-rofl
 version: 0.1.0
-repository: https://github.com/Thorn-Protocol/thorn-agent-server
-author: Thorn Protocol
-license: Apache-2.0
 tee: tdx
 kind: container
 resources:
-    memory: 4096
-    cpus: 4
-    storage:
-        kind: disk-persistent
-        size: 4096
+  memory: 4096
+  cpus: 4
+  storage:
+    kind: disk-persistent
+    size: 4096
 artifacts:
-    firmware: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.3.3/ovmf.tdx.fd#db47100a7d6a0c1f6983be224137c3f8d7cb09b63bb1c7a5ee7829d8e994a42f
-    kernel: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.3.3/stage1.bin#539f25c66a27b2ca3c6b4d3333b88c64e531fcc96776c37a12c9ce06dd7fbac9
-    stage2: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.3.3/stage2-podman.tar.bz2#827531546f3db6b0945ece7ddab4e10d648eaa3ba1c146b7889d7cb9cbf0b507
-    container:
-        runtime: https://github.com/oasisprotocol/oasis-sdk/releases/download/rofl-containers%2Fv0.4.1/rofl-containers#bdd2735af9ff10c9b1c1e8db535f4751739bd3707600c57b81e80195e6207673
-        compose: compose.yaml
+  firmware: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.3.3/ovmf.tdx.fd#db47100a7d6a0c1f6983be224137c3f8d7cb09b63bb1c7a5ee7829d8e994a42f
+  kernel: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.3.3/stage1.bin#539f25c66a27b2ca3c6b4d3333b88c64e531fcc96776c37a12c9ce06dd7fbac9
+  stage2: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.3.3/stage2-podman.tar.bz2#827531546f3db6b0945ece7ddab4e10d648eaa3ba1c146b7889d7cb9cbf0b507
+  container:
+    runtime: https://github.com/oasisprotocol/oasis-sdk/releases/download/rofl-containers%2Fv0.4.1/rofl-containers#bdd2735af9ff10c9b1c1e8db535f4751739bd3707600c57b81e80195e6207673
+    compose: compose.yaml
 deployments:
-    default:
-        app_id: rofl1qz68pxfzjueelvgyn8nmakj4lcw7pv4v6g7lcqcf
-        network: testnet
-        paratime: sapphire
-        admin: dev
-        trust_root:
-            height: 26588671
-            hash: b6129b705b9d7c8a434541d216b0a037ddb640f9745b6a9a6c0ea4ef99b9e85a
-        policy:
-            quotes:
-                pcs:
-                    tcb_validity_period: 30
-                    min_tcb_evaluation_data_number: 17
-                    tdx: {}
-            enclaves:
-                - YMohDnK0o/icYJvKVsnE1cbewsDtHRpNbFkAPLvmAOQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
-                - J54mOW17GIZ2fcAH0WfWf+TZq+n5nbi+ytzP9NZyZzEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
-            endorsements:
-                - any: {}
-            fees: endorsing_node
-            max_expiration: 3
-        secrets:
-            - name: AGENT_EVM_PRIVATE_KEY
-              value: pGJwa1ggINpSjViDUgEEqvx1wFW9IxPlQG1vyomYjqv9s5tgQlxkbmFtZVglpA/3KjicQN1z9O5iJPXNjrGW47/S6PbC8upf99i7oKpilqhtd2Vub25jZU/DuBqP2VwVTlKPTc95M+dldmFsdWVYUgen37gn33tRhx0OO+GkJciuQwsYTbp90bevUVs55We1HBj70ovDIa6G8xZHChuSZnHcyiAMJRApcBK7wHxnaSb1R/5jPaAujCQA23MlUn4zdE0=
-            - name: CENTIC_API_KEYS
-              value: pGJwa1ggLaCpejpfl0NkH3bzu3xcc9qna1wU8UcN+a2qbrtV1DFkbmFtZVgfcbL5lQpo6VkiithN6r8UNz8j2Mm9I5pZi+Jh8ctrnmVub25jZU/cG3Nl4VnEtJMUEryrVcRldmFsdWVYQJnt2/97tcziSTEdSqm0c0ty9gH+FDZpZy0S8ql+HzLf1SUZ5Iv0o3+1y/xYBB1L84uXEpzW+r9qvX4IdzwvBtI=
+  default:
+    app_id: rofl1qz68pxfzjueelvgyn8nmakj4lcw7pv4v6g7lcqcf
+    network: testnet
+    paratime: sapphire
+    admin: dev
+    trust_root:
+      height: 26588671
+      hash: b6129b705b9d7c8a434541d216b0a037ddb640f9745b6a9a6c0ea4ef99b9e85a
+    policy:
+      quotes:
+        pcs:
+          tcb_validity_period: 30
+          min_tcb_evaluation_data_number: 17
+          tdx: {}
+      enclaves:
+        - hgsdWgRq/7eLWMGOSHyQtB6YQA5Qv9EQcaGDp+yuQf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+        - HEO2i3Sp5cLevQ6zk4ve07A1USlJ3mg4vuDZFyWkppAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+      endorsements:
+        - any: {}
+      fees: endorsing_node
+      max_expiration: 3
+    secrets:
+      - name: AGENT_EVM_PRIVATE_KEY
+        value: pGJwa1ggINpSjViDUgEEqvx1wFW9IxPlQG1vyomYjqv9s5tgQlxkbmFtZVglpA/3KjicQN1z9O5iJPXNjrGW47/S6PbC8upf99i7oKpilqhtd2Vub25jZU/DuBqP2VwVTlKPTc95M+dldmFsdWVYUgen37gn33tRhx0OO+GkJciuQwsYTbp90bevUVs55We1HBj70ovDIa6G8xZHChuSZnHcyiAMJRApcBK7wHxnaSb1R/5jPaAujCQA23MlUn4zdE0=
+      - name: CENTIC_API_KEYS
+        value: pGJwa1ggLaCpejpfl0NkH3bzu3xcc9qna1wU8UcN+a2qbrtV1DFkbmFtZVgfcbL5lQpo6VkiithN6r8UNz8j2Mm9I5pZi+Jh8ctrnmVub25jZU/cG3Nl4VnEtJMUEryrVcRldmFsdWVYQJnt2/97tcziSTEdSqm0c0ty9gH+FDZpZy0S8ql+HzLf1SUZ5Iv0o3+1y/xYBB1L84uXEpzW+r9qvX4IdzwvBtI=
+      - name: TELEGRAM_BOT_TOKEN
+        value: pGJwa1ggsZI+ftjyNj6uE7mlKiRa2x6F4Q04Q19Nfxpd8Kcd2U5kbmFtZVgiwW2O6t99aTpyQxhHz1PBCnYw60Rk7bBCQSJZgLaLJodbzmVub25jZU9R27greuuVqRAF+NB16F5ldmFsdWVYPuSLv9wlfvWzrz0Fiac7hwm3E+io2E/XGv00IF+yo2m0pUjBQCbpuji+5nV2xL/Xbm+TgH8nfgFNHOJt+z9Q
+      - name: TELEGRAM_GROUP_ID
+        value: pGJwa1ggJkqYWZ3GCIzHK7vyX6Py7CO/jSkEIdUuQ06nWzhGDyxkbmFtZVghpLkVkAZIys4qF1VQ8Qvf5njY6CxIaIF3MVTkyLvCnGfOZW5vbmNlTzHS9IroKt1RgNEVhplgAWV2YWx1ZVgbWePiY92JDefNk8RoZs6oDWv0Xlf+OtKED6bT
+      - name: IN_ROFL
+        value: pGJwa1ggMP799a7jFn5V+rNOxAXWXTjyhRR2uGAsrzlyEb7jxBBkbmFtZVc/fS+kW1NghhNZt9bQRSZe2VFvq9ZNtmVub25jZU/kNUgm1DOMOSmbORNvTl9ldmFsdWVUoNTMHu0xpHgHAfmSdvyj2wuAwyk=
