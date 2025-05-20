@@ -25,6 +25,11 @@ export class OmniFarming {
     async updateRate() {
         try {
             let totalValue = 0;
+            for (const module of this.modules) {
+                let value = await module.getTotalValue();
+                console.log(" Name ", module.name, "Value: ", value);
+                totalValue += value;
+            }
             totalValue += await this.omnifarming.getTotalValue();
             totalValue += await routerService.getBalanceBridging("0xc378E3e2304476bf4c2fBf3204535236F7628B7A");
             await this.omnifarming.updateRate(totalValue);
@@ -61,17 +66,15 @@ export class OmniFarming {
                 for (const module of this.modules) {
                     await module.transferAllToModule(bestModule);
                 }
-
+                await this.updateRate();
                 let amountUSDCNeedBridgeForWithdraw = await this.omnifarming.getAmountNeedForWithdraw();
                 await this.bestModule.withdraw(amountUSDCNeedBridgeForWithdraw, this.omnifarming);
             } catch (error) {
                 console.log("Error processing: ", error);
             }
-            await this.updateRate();
             await this.omnifarming.withdrawProcess();
-
-            //await this.omnifarming.bridgeToModule(bestModule);
-            //await bestModule.deposit();
+            await this.omnifarming.bridgeToModule(bestModule);
+            await bestModule.deposit();
         } catch (error) {
             console.log(error);
         }

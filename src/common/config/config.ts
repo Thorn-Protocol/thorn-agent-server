@@ -22,7 +22,7 @@ export const EVM_ADDRESS = {
     },
     sapphire: {
         usdc: "0x97eec1c29f745dC7c267F90292AA663d997a601D",
-        omniFarming: "0xaF89642D2C2dFa559dD1509568578d4A6cfe4422",
+        omniFarming: "0xa4411Ad2FCED7a9f9145DA02817fc341b948b4FF",
         fundFee: "0xB5E49fF0acD4d5cD76086e4D9552f9ce5875B157",
     },
     arbitrum: {

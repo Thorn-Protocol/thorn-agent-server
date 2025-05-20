@@ -26,65 +26,126 @@ import type {
 export interface OmniFarmingInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "owner"
+      | "supportsInterface"
+      | "transferOwnership"
+      | "upgradeTo"
+      | "upgradeToAndCall"
       | "BPS_BASE"
-      | "agentAddress"
+      | "FEE_BPS"
+      | "agent"
+      | "allowance"
+      | "approve"
+      | "asset"
+      | "balanceOf"
+      | "beneficiary"
       | "changeAgent"
       | "changeGovernment"
+      | "completeInitialization"
+      | "convertToAssets"
+      | "convertToShares"
       | "currentWithdrawalIndex"
+      | "decimals"
       | "deposit"
-      | "feeBeneficiary"
       | "getDataForNextWithdraw"
-      | "governanceAddress"
+      | "governance"
       | "governanceExecute"
-      | "lastRate"
-      | "lastRateUpdateTimestamp"
-      | "lastWithdrawalRequestNonce"
-      | "lpToUsdcRate"
-      | "maxLpSupply"
-      | "minLpWithdrawalAmount"
+      | "initialize"
+      | "isInitialized"
+      | "maxDeposit"
+      | "maxMint"
+      | "maxRedeem"
+      | "maxWithdraw"
+      | "minDepositAmount"
+      | "minSharesWithdrawal"
+      | "mint"
+      | "name"
       | "numberRequestWithdraw"
       | "pause"
       | "paused"
+      | "previewDeposit"
+      | "previewMint"
+      | "previewRedeem"
+      | "previewWithdraw"
+      | "redeem"
       | "requestWithdraw"
       | "setBeneficiary"
       | "setFee"
-      | "setMaxSupply"
-      | "setMinLpWithdraw"
-      | "totalLockedLpSupply"
-      | "totalLpSupply"
+      | "setMinDepositAmount"
+      | "setMinSharesWithdrawal"
+      | "symbol"
+      | "totalAssets"
+      | "totalAssetsOmniFarming"
+      | "totalLockedShares"
+      | "totalSupply"
       | "totalWithdrawalRequests"
+      | "transfer"
+      | "transferFrom"
       | "transferToTreasury"
       | "unpause"
-      | "updateRate"
-      | "usdcToken"
-      | "userLockedLpBalance"
-      | "userLpBalance"
-      | "userRequestHistory"
-      | "userRequestNonce"
-      | "userUsdcDeposits"
+      | "updateTotalAssets"
+      | "userLockedShares"
+      | "withdraw"
       | "withdrawForRequested"
-      | "withdrawalFeeBps"
       | "withdrawalRequestIndexToUser"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
+      | "OwnershipTransferred"
+      | "ProxyImplementationUpdated"
       | "AgentChanged"
+      | "Approval"
+      | "Deposit"
       | "Deposited"
       | "FeeUpdated"
       | "GovernmentChanged"
+      | "Initialized"
       | "Paused"
       | "RateUpdated"
       | "RequestedWithdraw"
-      | "TreasurySet"
+      | "Transfer"
       | "TreasuryTransferred"
       | "Unpaused"
+      | "Withdraw"
       | "Withdrawn"
   ): EventFragment;
 
-  encodeFunctionData(functionFragment: "BPS_BASE", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "agentAddress",
+    functionFragment: "supportsInterface",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "upgradeTo",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "upgradeToAndCall",
+    values: [AddressLike, BytesLike]
+  ): string;
+  encodeFunctionData(functionFragment: "BPS_BASE", values?: undefined): string;
+  encodeFunctionData(functionFragment: "FEE_BPS", values?: undefined): string;
+  encodeFunctionData(functionFragment: "agent", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "allowance",
+    values: [AddressLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "approve",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "asset", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "balanceOf",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "beneficiary",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -96,23 +157,32 @@ export interface OmniFarmingInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "currentWithdrawalIndex",
+    functionFragment: "completeInitialization",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "deposit",
+    functionFragment: "convertToAssets",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "feeBeneficiary",
+    functionFragment: "convertToShares",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "currentWithdrawalIndex",
     values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "deposit",
+    values: [BigNumberish, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getDataForNextWithdraw",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "governanceAddress",
+    functionFragment: "governance",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -120,35 +190,68 @@ export interface OmniFarmingInterface extends Interface {
     values: [AddressLike, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "lastRate",
+    functionFragment: "initialize",
+    values: [AddressLike, AddressLike, AddressLike, AddressLike, string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isInitialized",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "maxDeposit",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "lastRateUpdateTimestamp",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lastWithdrawalRequestNonce",
+    functionFragment: "maxMint",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "lpToUsdcRate",
+    functionFragment: "maxRedeem",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "maxWithdraw",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "minDepositAmount",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "maxLpSupply",
+    functionFragment: "minSharesWithdrawal",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "minLpWithdrawalAmount",
-    values?: undefined
+    functionFragment: "mint",
+    values: [BigNumberish, AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "numberRequestWithdraw",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "previewDeposit",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "previewMint",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "previewRedeem",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "previewWithdraw",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redeem",
+    values: [BigNumberish, AddressLike, AddressLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "requestWithdraw",
     values: [BigNumberish]
@@ -162,19 +265,28 @@ export interface OmniFarmingInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setMaxSupply",
+    functionFragment: "setMinDepositAmount",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "setMinLpWithdraw",
+    functionFragment: "setMinSharesWithdrawal",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "totalLockedLpSupply",
+    functionFragment: "totalAssets",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "totalLpSupply",
+    functionFragment: "totalAssetsOmniFarming",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "totalLockedShares",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "totalSupply",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -182,41 +294,32 @@ export interface OmniFarmingInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "transfer",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferFrom",
+    values: [AddressLike, AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferToTreasury",
     values: [BigNumberish, AddressLike, AddressLike, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "updateRate",
+    functionFragment: "updateTotalAssets",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "usdcToken", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "userLockedLpBalance",
+    functionFragment: "userLockedShares",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "userLpBalance",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userRequestHistory",
-    values: [AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userRequestNonce",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userUsdcDeposits",
-    values: [AddressLike]
+    functionFragment: "withdraw",
+    values: [BigNumberish, AddressLike, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawForRequested",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawalFeeBps",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -224,9 +327,29 @@ export interface OmniFarmingInterface extends Interface {
     values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "BPS_BASE", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "agentAddress",
+    functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "upgradeTo", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeToAndCall",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "BPS_BASE", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "FEE_BPS", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "agent", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "asset", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "beneficiary",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -238,53 +361,77 @@ export interface OmniFarmingInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "completeInitialization",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "convertToAssets",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "convertToShares",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "currentWithdrawalIndex",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "feeBeneficiary",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "getDataForNextWithdraw",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "governanceAddress",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "governance", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "governanceExecute",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "lastRate", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "lastRateUpdateTimestamp",
+    functionFragment: "isInitialized",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "maxDeposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "maxMint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "maxRedeem", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "maxWithdraw",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "lastWithdrawalRequestNonce",
+    functionFragment: "minDepositAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "lpToUsdcRate",
+    functionFragment: "minSharesWithdrawal",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "maxLpSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "minLpWithdrawalAmount",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "numberRequestWithdraw",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "previewDeposit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "previewMint",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "previewRedeem",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "previewWithdraw",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "requestWithdraw",
     data: BytesLike
@@ -295,23 +442,37 @@ export interface OmniFarmingInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setFee", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setMaxSupply",
+    functionFragment: "setMinDepositAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setMinLpWithdraw",
+    functionFragment: "setMinSharesWithdrawal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "totalAssets",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "totalLockedLpSupply",
+    functionFragment: "totalAssetsOmniFarming",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "totalLpSupply",
+    functionFragment: "totalLockedShares",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "totalWithdrawalRequests",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -319,40 +480,55 @@ export interface OmniFarmingInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "updateRate", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "usdcToken", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "userLockedLpBalance",
+    functionFragment: "updateTotalAssets",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "userLpBalance",
+    functionFragment: "userLockedShares",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "userRequestHistory",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "userRequestNonce",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "userUsdcDeposits",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawForRequested",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawalFeeBps",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawalRequestIndexToUser",
     data: BytesLike
   ): Result;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ProxyImplementationUpdatedEvent {
+  export type InputTuple = [
+    previousImplementation: AddressLike,
+    newImplementation: AddressLike
+  ];
+  export type OutputTuple = [
+    previousImplementation: string,
+    newImplementation: string
+  ];
+  export interface OutputObject {
+    previousImplementation: string;
+    newImplementation: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace AgentChangedEvent {
@@ -367,21 +543,60 @@ export namespace AgentChangedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace ApprovalEvent {
+  export type InputTuple = [
+    owner: AddressLike,
+    spender: AddressLike,
+    value: BigNumberish
+  ];
+  export type OutputTuple = [owner: string, spender: string, value: bigint];
+  export interface OutputObject {
+    owner: string;
+    spender: string;
+    value: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace DepositEvent {
+  export type InputTuple = [
+    sender: AddressLike,
+    owner: AddressLike,
+    assets: BigNumberish,
+    shares: BigNumberish
+  ];
+  export type OutputTuple = [
+    sender: string,
+    owner: string,
+    assets: bigint,
+    shares: bigint
+  ];
+  export interface OutputObject {
+    sender: string;
+    owner: string;
+    assets: bigint;
+    shares: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace DepositedEvent {
   export type InputTuple = [
     user: AddressLike,
-    tokenAmount: BigNumberish,
-    lpAmount: BigNumberish
+    amount: BigNumberish,
+    shares: BigNumberish
   ];
-  export type OutputTuple = [
-    user: string,
-    tokenAmount: bigint,
-    lpAmount: bigint
-  ];
+  export type OutputTuple = [user: string, amount: bigint, shares: bigint];
   export interface OutputObject {
     user: string;
-    tokenAmount: bigint;
-    lpAmount: bigint;
+    amount: bigint;
+    shares: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -407,6 +622,18 @@ export namespace GovernmentChangedEvent {
   export type OutputTuple = [newGovernment: string];
   export interface OutputObject {
     newGovernment: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace InitializedEvent {
+  export type InputTuple = [version: BigNumberish];
+  export type OutputTuple = [version: bigint];
+  export interface OutputObject {
+    version: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -440,11 +667,11 @@ export namespace RateUpdatedEvent {
 }
 
 export namespace RequestedWithdrawEvent {
-  export type InputTuple = [user: AddressLike, amount: BigNumberish];
-  export type OutputTuple = [user: string, amount: bigint];
+  export type InputTuple = [user: AddressLike, shares: BigNumberish];
+  export type OutputTuple = [user: string, shares: bigint];
   export interface OutputObject {
     user: string;
-    amount: bigint;
+    shares: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -452,21 +679,17 @@ export namespace RequestedWithdrawEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace TreasurySetEvent {
+export namespace TransferEvent {
   export type InputTuple = [
-    chainId: BigNumberish,
-    treasury: BytesLike,
-    tokenAddress: BytesLike
+    from: AddressLike,
+    to: AddressLike,
+    value: BigNumberish
   ];
-  export type OutputTuple = [
-    chainId: bigint,
-    treasury: string,
-    tokenAddress: string
-  ];
+  export type OutputTuple = [from: string, to: string, value: bigint];
   export interface OutputObject {
-    chainId: bigint;
-    treasury: string;
-    tokenAddress: string;
+    from: string;
+    to: string;
+    value: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -496,24 +719,52 @@ export namespace UnpausedEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace WithdrawEvent {
+  export type InputTuple = [
+    sender: AddressLike,
+    receiver: AddressLike,
+    owner: AddressLike,
+    assets: BigNumberish,
+    shares: BigNumberish
+  ];
+  export type OutputTuple = [
+    sender: string,
+    receiver: string,
+    owner: string,
+    assets: bigint,
+    shares: bigint
+  ];
+  export interface OutputObject {
+    sender: string;
+    receiver: string;
+    owner: string;
+    assets: bigint;
+    shares: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace WithdrawnEvent {
   export type InputTuple = [
     user: AddressLike,
-    lpAmount: BigNumberish,
-    tokenAmount: BigNumberish,
-    feeAmount: BigNumberish
+    shares: BigNumberish,
+    amount: BigNumberish,
+    fee: BigNumberish
   ];
   export type OutputTuple = [
     user: string,
-    lpAmount: bigint,
-    tokenAmount: bigint,
-    feeAmount: bigint
+    shares: bigint,
+    amount: bigint,
+    fee: bigint
   ];
   export interface OutputObject {
     user: string;
-    lpAmount: bigint;
-    tokenAmount: bigint;
-    feeAmount: bigint;
+    shares: bigint;
+    amount: bigint;
+    fee: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -564,9 +815,51 @@ export interface OmniFarming extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  owner: TypedContractMethod<[], [string], "view">;
+
+  supportsInterface: TypedContractMethod<[id: BytesLike], [boolean], "view">;
+
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  upgradeTo: TypedContractMethod<
+    [newImplementation: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  upgradeToAndCall: TypedContractMethod<
+    [newImplementation: AddressLike, data: BytesLike],
+    [void],
+    "payable"
+  >;
+
   BPS_BASE: TypedContractMethod<[], [bigint], "view">;
 
-  agentAddress: TypedContractMethod<[], [string], "view">;
+  FEE_BPS: TypedContractMethod<[], [bigint], "view">;
+
+  agent: TypedContractMethod<[], [string], "view">;
+
+  allowance: TypedContractMethod<
+    [owner: AddressLike, spender: AddressLike],
+    [bigint],
+    "view"
+  >;
+
+  approve: TypedContractMethod<
+    [spender: AddressLike, value: BigNumberish],
+    [boolean],
+    "nonpayable"
+  >;
+
+  asset: TypedContractMethod<[], [string], "view">;
+
+  balanceOf: TypedContractMethod<[account: AddressLike], [bigint], "view">;
+
+  beneficiary: TypedContractMethod<[], [string], "view">;
 
   changeAgent: TypedContractMethod<
     [newAgent: AddressLike],
@@ -580,19 +873,33 @@ export interface OmniFarming extends BaseContract {
     "nonpayable"
   >;
 
+  completeInitialization: TypedContractMethod<[], [void], "nonpayable">;
+
+  convertToAssets: TypedContractMethod<
+    [shares: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  convertToShares: TypedContractMethod<
+    [assets: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
   currentWithdrawalIndex: TypedContractMethod<[], [bigint], "view">;
 
-  /**
-   * Deposit USDC to OmniFarming
-   * @param amount : amount of USDC to deposit
-   */
-  deposit: TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
+  decimals: TypedContractMethod<[], [bigint], "view">;
 
-  feeBeneficiary: TypedContractMethod<[], [string], "view">;
+  deposit: TypedContractMethod<
+    [assets: BigNumberish, receiver: AddressLike],
+    [bigint],
+    "nonpayable"
+  >;
 
   getDataForNextWithdraw: TypedContractMethod<[], [[string, bigint]], "view">;
 
-  governanceAddress: TypedContractMethod<[], [string], "view">;
+  governance: TypedContractMethod<[], [string], "view">;
 
   governanceExecute: TypedContractMethod<
     [target: AddressLike, value: BigNumberish, data: BytesLike],
@@ -600,37 +907,67 @@ export interface OmniFarming extends BaseContract {
     "nonpayable"
   >;
 
-  lastRate: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
-
-  lastRateUpdateTimestamp: TypedContractMethod<[], [bigint], "view">;
-
-  lastWithdrawalRequestNonce: TypedContractMethod<
-    [arg0: AddressLike],
-    [bigint],
-    "view"
+  initialize: TypedContractMethod<
+    [
+      _governance: AddressLike,
+      _agent: AddressLike,
+      _beneficiary: AddressLike,
+      _asset: AddressLike,
+      _name: string,
+      _symbol: string
+    ],
+    [void],
+    "nonpayable"
   >;
 
-  lpToUsdcRate: TypedContractMethod<[], [bigint], "view">;
+  isInitialized: TypedContractMethod<[], [boolean], "view">;
 
-  maxLpSupply: TypedContractMethod<[], [bigint], "view">;
+  maxDeposit: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
-  minLpWithdrawalAmount: TypedContractMethod<[], [bigint], "view">;
+  maxMint: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
+
+  maxRedeem: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+
+  maxWithdraw: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+
+  minDepositAmount: TypedContractMethod<[], [bigint], "view">;
+
+  minSharesWithdrawal: TypedContractMethod<[], [bigint], "view">;
+
+  mint: TypedContractMethod<
+    [shares: BigNumberish, receiver: AddressLike],
+    [bigint],
+    "nonpayable"
+  >;
+
+  name: TypedContractMethod<[], [string], "view">;
 
   numberRequestWithdraw: TypedContractMethod<[], [bigint], "view">;
 
   pause: TypedContractMethod<[], [void], "nonpayable">;
 
-  /**
-   * Returns true if the contract is paused, and false otherwise.
-   */
   paused: TypedContractMethod<[], [boolean], "view">;
 
-  /**
-   * Request withdraw LP from OmniFarming, agent will automatic withdraw for user
-   * @param amount : amount of LP to request withdraw
-   */
+  previewDeposit: TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
+
+  previewMint: TypedContractMethod<[shares: BigNumberish], [bigint], "view">;
+
+  previewRedeem: TypedContractMethod<[shares: BigNumberish], [bigint], "view">;
+
+  previewWithdraw: TypedContractMethod<
+    [assets: BigNumberish],
+    [bigint],
+    "view"
+  >;
+
+  redeem: TypedContractMethod<
+    [shares: BigNumberish, receiver: AddressLike, owner: AddressLike],
+    [bigint],
+    "nonpayable"
+  >;
+
   requestWithdraw: TypedContractMethod<
-    [amount: BigNumberish],
+    [shares: BigNumberish],
     [void],
     "nonpayable"
   >;
@@ -643,23 +980,41 @@ export interface OmniFarming extends BaseContract {
 
   setFee: TypedContractMethod<[newFee: BigNumberish], [void], "nonpayable">;
 
-  setMaxSupply: TypedContractMethod<
-    [newMaxSupply: BigNumberish],
+  setMinDepositAmount: TypedContractMethod<
+    [newMinDepositAmount: BigNumberish],
     [void],
     "nonpayable"
   >;
 
-  setMinLpWithdraw: TypedContractMethod<
-    [newMinLpWithdraw: BigNumberish],
+  setMinSharesWithdrawal: TypedContractMethod<
+    [newMinSharesWithdrawal: BigNumberish],
     [void],
     "nonpayable"
   >;
 
-  totalLockedLpSupply: TypedContractMethod<[], [bigint], "view">;
+  symbol: TypedContractMethod<[], [string], "view">;
 
-  totalLpSupply: TypedContractMethod<[], [bigint], "view">;
+  totalAssets: TypedContractMethod<[], [bigint], "view">;
+
+  totalAssetsOmniFarming: TypedContractMethod<[], [bigint], "view">;
+
+  totalLockedShares: TypedContractMethod<[], [bigint], "view">;
+
+  totalSupply: TypedContractMethod<[], [bigint], "view">;
 
   totalWithdrawalRequests: TypedContractMethod<[], [bigint], "view">;
+
+  transfer: TypedContractMethod<
+    [to: AddressLike, value: BigNumberish],
+    [boolean],
+    "nonpayable"
+  >;
+
+  transferFrom: TypedContractMethod<
+    [from: AddressLike, to: AddressLike, value: BigNumberish],
+    [boolean],
+    "nonpayable"
+  >;
 
   transferToTreasury: TypedContractMethod<
     [
@@ -674,49 +1029,21 @@ export interface OmniFarming extends BaseContract {
 
   unpause: TypedContractMethod<[], [void], "nonpayable">;
 
-  updateRate: TypedContractMethod<
-    [newRate: BigNumberish],
+  updateTotalAssets: TypedContractMethod<
+    [newTotalAssets: BigNumberish],
     [void],
     "nonpayable"
   >;
 
-  usdcToken: TypedContractMethod<[], [string], "view">;
+  userLockedShares: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
-  userLockedLpBalance: TypedContractMethod<
-    [arg0: AddressLike],
+  withdraw: TypedContractMethod<
+    [assets: BigNumberish, receiver: AddressLike, owner: AddressLike],
     [bigint],
-    "view"
+    "nonpayable"
   >;
 
-  userLpBalance: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
-
-  userRequestHistory: TypedContractMethod<
-    [arg0: AddressLike, arg1: BigNumberish],
-    [
-      [bigint, bigint, boolean, boolean, bigint, bigint, bigint] & {
-        requestTimestamp: bigint;
-        requestAmount: bigint;
-        isWithdrawal: boolean;
-        isCompleted: boolean;
-        requestNonce: bigint;
-        requestAmountLP: bigint;
-        requestAmountUSDC: bigint;
-      }
-    ],
-    "view"
-  >;
-
-  userRequestNonce: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
-
-  userUsdcDeposits: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
-
-  /**
-   * Only agent can call this function
-   * Withdraw for requested LP from OmniFarming
-   */
   withdrawForRequested: TypedContractMethod<[], [void], "nonpayable">;
-
-  withdrawalFeeBps: TypedContractMethod<[], [bigint], "view">;
 
   withdrawalRequestIndexToUser: TypedContractMethod<
     [arg0: BigNumberish],
@@ -729,10 +1056,59 @@ export interface OmniFarming extends BaseContract {
   ): T;
 
   getFunction(
+    nameOrSignature: "owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "supportsInterface"
+  ): TypedContractMethod<[id: BytesLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "upgradeTo"
+  ): TypedContractMethod<
+    [newImplementation: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "upgradeToAndCall"
+  ): TypedContractMethod<
+    [newImplementation: AddressLike, data: BytesLike],
+    [void],
+    "payable"
+  >;
+  getFunction(
     nameOrSignature: "BPS_BASE"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "agentAddress"
+    nameOrSignature: "FEE_BPS"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "agent"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "allowance"
+  ): TypedContractMethod<
+    [owner: AddressLike, spender: AddressLike],
+    [bigint],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "approve"
+  ): TypedContractMethod<
+    [spender: AddressLike, value: BigNumberish],
+    [boolean],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "asset"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "balanceOf"
+  ): TypedContractMethod<[account: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "beneficiary"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "changeAgent"
@@ -741,19 +1117,32 @@ export interface OmniFarming extends BaseContract {
     nameOrSignature: "changeGovernment"
   ): TypedContractMethod<[newGovernment: AddressLike], [void], "nonpayable">;
   getFunction(
+    nameOrSignature: "completeInitialization"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "convertToAssets"
+  ): TypedContractMethod<[shares: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "convertToShares"
+  ): TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
+  getFunction(
     nameOrSignature: "currentWithdrawalIndex"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "deposit"
-  ): TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
+    nameOrSignature: "decimals"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "feeBeneficiary"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: "deposit"
+  ): TypedContractMethod<
+    [assets: BigNumberish, receiver: AddressLike],
+    [bigint],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "getDataForNextWithdraw"
   ): TypedContractMethod<[], [[string, bigint]], "view">;
   getFunction(
-    nameOrSignature: "governanceAddress"
+    nameOrSignature: "governance"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "governanceExecute"
@@ -763,23 +1152,50 @@ export interface OmniFarming extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "lastRate"
+    nameOrSignature: "initialize"
+  ): TypedContractMethod<
+    [
+      _governance: AddressLike,
+      _agent: AddressLike,
+      _beneficiary: AddressLike,
+      _asset: AddressLike,
+      _name: string,
+      _symbol: string
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "isInitialized"
+  ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "maxDeposit"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "lastRateUpdateTimestamp"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "lastWithdrawalRequestNonce"
+    nameOrSignature: "maxMint"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "lpToUsdcRate"
+    nameOrSignature: "maxRedeem"
+  ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "maxWithdraw"
+  ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "minDepositAmount"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "maxLpSupply"
+    nameOrSignature: "minSharesWithdrawal"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "minLpWithdrawalAmount"
-  ): TypedContractMethod<[], [bigint], "view">;
+    nameOrSignature: "mint"
+  ): TypedContractMethod<
+    [shares: BigNumberish, receiver: AddressLike],
+    [bigint],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "name"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "numberRequestWithdraw"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -790,8 +1206,27 @@ export interface OmniFarming extends BaseContract {
     nameOrSignature: "paused"
   ): TypedContractMethod<[], [boolean], "view">;
   getFunction(
+    nameOrSignature: "previewDeposit"
+  ): TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "previewMint"
+  ): TypedContractMethod<[shares: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "previewRedeem"
+  ): TypedContractMethod<[shares: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "previewWithdraw"
+  ): TypedContractMethod<[assets: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "redeem"
+  ): TypedContractMethod<
+    [shares: BigNumberish, receiver: AddressLike, owner: AddressLike],
+    [bigint],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "requestWithdraw"
-  ): TypedContractMethod<[amount: BigNumberish], [void], "nonpayable">;
+  ): TypedContractMethod<[shares: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setBeneficiary"
   ): TypedContractMethod<[newBeneficiary: AddressLike], [void], "nonpayable">;
@@ -799,24 +1234,51 @@ export interface OmniFarming extends BaseContract {
     nameOrSignature: "setFee"
   ): TypedContractMethod<[newFee: BigNumberish], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "setMaxSupply"
-  ): TypedContractMethod<[newMaxSupply: BigNumberish], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "setMinLpWithdraw"
+    nameOrSignature: "setMinDepositAmount"
   ): TypedContractMethod<
-    [newMinLpWithdraw: BigNumberish],
+    [newMinDepositAmount: BigNumberish],
     [void],
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "totalLockedLpSupply"
+    nameOrSignature: "setMinSharesWithdrawal"
+  ): TypedContractMethod<
+    [newMinSharesWithdrawal: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "symbol"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "totalAssets"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "totalLpSupply"
+    nameOrSignature: "totalAssetsOmniFarming"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "totalLockedShares"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "totalSupply"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "totalWithdrawalRequests"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "transfer"
+  ): TypedContractMethod<
+    [to: AddressLike, value: BigNumberish],
+    [boolean],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "transferFrom"
+  ): TypedContractMethod<
+    [from: AddressLike, to: AddressLike, value: BigNumberish],
+    [boolean],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "transferToTreasury"
   ): TypedContractMethod<
@@ -833,56 +1295,59 @@ export interface OmniFarming extends BaseContract {
     nameOrSignature: "unpause"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "updateRate"
-  ): TypedContractMethod<[newRate: BigNumberish], [void], "nonpayable">;
+    nameOrSignature: "updateTotalAssets"
+  ): TypedContractMethod<[newTotalAssets: BigNumberish], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "usdcToken"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "userLockedLpBalance"
+    nameOrSignature: "userLockedShares"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
-    nameOrSignature: "userLpBalance"
-  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "userRequestHistory"
+    nameOrSignature: "withdraw"
   ): TypedContractMethod<
-    [arg0: AddressLike, arg1: BigNumberish],
-    [
-      [bigint, bigint, boolean, boolean, bigint, bigint, bigint] & {
-        requestTimestamp: bigint;
-        requestAmount: bigint;
-        isWithdrawal: boolean;
-        isCompleted: boolean;
-        requestNonce: bigint;
-        requestAmountLP: bigint;
-        requestAmountUSDC: bigint;
-      }
-    ],
-    "view"
+    [assets: BigNumberish, receiver: AddressLike, owner: AddressLike],
+    [bigint],
+    "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "userRequestNonce"
-  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "userUsdcDeposits"
-  ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "withdrawForRequested"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
-    nameOrSignature: "withdrawalFeeBps"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "withdrawalRequestIndexToUser"
   ): TypedContractMethod<[arg0: BigNumberish], [string], "view">;
 
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
+  >;
+  getEvent(
+    key: "ProxyImplementationUpdated"
+  ): TypedContractEvent<
+    ProxyImplementationUpdatedEvent.InputTuple,
+    ProxyImplementationUpdatedEvent.OutputTuple,
+    ProxyImplementationUpdatedEvent.OutputObject
+  >;
   getEvent(
     key: "AgentChanged"
   ): TypedContractEvent<
     AgentChangedEvent.InputTuple,
     AgentChangedEvent.OutputTuple,
     AgentChangedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Approval"
+  ): TypedContractEvent<
+    ApprovalEvent.InputTuple,
+    ApprovalEvent.OutputTuple,
+    ApprovalEvent.OutputObject
+  >;
+  getEvent(
+    key: "Deposit"
+  ): TypedContractEvent<
+    DepositEvent.InputTuple,
+    DepositEvent.OutputTuple,
+    DepositEvent.OutputObject
   >;
   getEvent(
     key: "Deposited"
@@ -906,6 +1371,13 @@ export interface OmniFarming extends BaseContract {
     GovernmentChangedEvent.OutputObject
   >;
   getEvent(
+    key: "Initialized"
+  ): TypedContractEvent<
+    InitializedEvent.InputTuple,
+    InitializedEvent.OutputTuple,
+    InitializedEvent.OutputObject
+  >;
+  getEvent(
     key: "Paused"
   ): TypedContractEvent<
     PausedEvent.InputTuple,
@@ -927,11 +1399,11 @@ export interface OmniFarming extends BaseContract {
     RequestedWithdrawEvent.OutputObject
   >;
   getEvent(
-    key: "TreasurySet"
+    key: "Transfer"
   ): TypedContractEvent<
-    TreasurySetEvent.InputTuple,
-    TreasurySetEvent.OutputTuple,
-    TreasurySetEvent.OutputObject
+    TransferEvent.InputTuple,
+    TransferEvent.OutputTuple,
+    TransferEvent.OutputObject
   >;
   getEvent(
     key: "TreasuryTransferred"
@@ -948,6 +1420,13 @@ export interface OmniFarming extends BaseContract {
     UnpausedEvent.OutputObject
   >;
   getEvent(
+    key: "Withdraw"
+  ): TypedContractEvent<
+    WithdrawEvent.InputTuple,
+    WithdrawEvent.OutputTuple,
+    WithdrawEvent.OutputObject
+  >;
+  getEvent(
     key: "Withdrawn"
   ): TypedContractEvent<
     WithdrawnEvent.InputTuple,
@@ -956,6 +1435,28 @@ export interface OmniFarming extends BaseContract {
   >;
 
   filters: {
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+
+    "ProxyImplementationUpdated(address,address)": TypedContractEvent<
+      ProxyImplementationUpdatedEvent.InputTuple,
+      ProxyImplementationUpdatedEvent.OutputTuple,
+      ProxyImplementationUpdatedEvent.OutputObject
+    >;
+    ProxyImplementationUpdated: TypedContractEvent<
+      ProxyImplementationUpdatedEvent.InputTuple,
+      ProxyImplementationUpdatedEvent.OutputTuple,
+      ProxyImplementationUpdatedEvent.OutputObject
+    >;
+
     "AgentChanged(address)": TypedContractEvent<
       AgentChangedEvent.InputTuple,
       AgentChangedEvent.OutputTuple,
@@ -965,6 +1466,28 @@ export interface OmniFarming extends BaseContract {
       AgentChangedEvent.InputTuple,
       AgentChangedEvent.OutputTuple,
       AgentChangedEvent.OutputObject
+    >;
+
+    "Approval(address,address,uint256)": TypedContractEvent<
+      ApprovalEvent.InputTuple,
+      ApprovalEvent.OutputTuple,
+      ApprovalEvent.OutputObject
+    >;
+    Approval: TypedContractEvent<
+      ApprovalEvent.InputTuple,
+      ApprovalEvent.OutputTuple,
+      ApprovalEvent.OutputObject
+    >;
+
+    "Deposit(address,address,uint256,uint256)": TypedContractEvent<
+      DepositEvent.InputTuple,
+      DepositEvent.OutputTuple,
+      DepositEvent.OutputObject
+    >;
+    Deposit: TypedContractEvent<
+      DepositEvent.InputTuple,
+      DepositEvent.OutputTuple,
+      DepositEvent.OutputObject
     >;
 
     "Deposited(address,uint256,uint256)": TypedContractEvent<
@@ -1000,6 +1523,17 @@ export interface OmniFarming extends BaseContract {
       GovernmentChangedEvent.OutputObject
     >;
 
+    "Initialized(uint64)": TypedContractEvent<
+      InitializedEvent.InputTuple,
+      InitializedEvent.OutputTuple,
+      InitializedEvent.OutputObject
+    >;
+    Initialized: TypedContractEvent<
+      InitializedEvent.InputTuple,
+      InitializedEvent.OutputTuple,
+      InitializedEvent.OutputObject
+    >;
+
     "Paused(address)": TypedContractEvent<
       PausedEvent.InputTuple,
       PausedEvent.OutputTuple,
@@ -1033,15 +1567,15 @@ export interface OmniFarming extends BaseContract {
       RequestedWithdrawEvent.OutputObject
     >;
 
-    "TreasurySet(uint256,bytes,bytes)": TypedContractEvent<
-      TreasurySetEvent.InputTuple,
-      TreasurySetEvent.OutputTuple,
-      TreasurySetEvent.OutputObject
+    "Transfer(address,address,uint256)": TypedContractEvent<
+      TransferEvent.InputTuple,
+      TransferEvent.OutputTuple,
+      TransferEvent.OutputObject
     >;
-    TreasurySet: TypedContractEvent<
-      TreasurySetEvent.InputTuple,
-      TreasurySetEvent.OutputTuple,
-      TreasurySetEvent.OutputObject
+    Transfer: TypedContractEvent<
+      TransferEvent.InputTuple,
+      TransferEvent.OutputTuple,
+      TransferEvent.OutputObject
     >;
 
     "TreasuryTransferred()": TypedContractEvent<
@@ -1064,6 +1598,17 @@ export interface OmniFarming extends BaseContract {
       UnpausedEvent.InputTuple,
       UnpausedEvent.OutputTuple,
       UnpausedEvent.OutputObject
+    >;
+
+    "Withdraw(address,address,address,uint256,uint256)": TypedContractEvent<
+      WithdrawEvent.InputTuple,
+      WithdrawEvent.OutputTuple,
+      WithdrawEvent.OutputObject
+    >;
+    Withdraw: TypedContractEvent<
+      WithdrawEvent.InputTuple,
+      WithdrawEvent.OutputTuple,
+      WithdrawEvent.OutputObject
     >;
 
     "Withdrawn(address,uint256,uint256,uint256)": TypedContractEvent<
