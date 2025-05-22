@@ -5,12 +5,10 @@ export abstract class Module {
     public abstract chainId: string;
     public abstract address: string;
     public abstract usdcAddress: string;
-
-    // Removed 'async' from abstract methods as per linting rules
+    abstract getAgentOnChain(): Promise<string>;
     abstract getAPY(): Promise<number>;
     abstract deposit(): Promise<void>;
     abstract transferAllToModule(module: Module): Promise<void>;
     abstract withdraw(amountNeedForWithdraw: number, omnifarming: OmniFarmingModule): Promise<void>;
-
     abstract getTotalValue(): Promise<number>;
 }

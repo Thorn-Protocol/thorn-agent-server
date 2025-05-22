@@ -3,10 +3,9 @@ import { CHAIN_ID, EVM_ADDRESS, MIN_BALANCE_TO_DEPOSIT, MIN_BRIDGE_AMOUNT, RPC }
 import { CompoundV3Module, CompoundV3Module__factory, ERC20, ERC20__factory } from "../../../typechain-types";
 
 import { Module } from "../../Module";
-import { routerService } from "../../../services/bridges/RouterService";
 import { OmniFarmingModule } from "../../../omni-farming/OmniFarmingModule";
-import { fundFeeService } from "../../../funding/FungingSerivce";
 import { centic } from "../../../services/data/CenticService";
+import { bridge } from "../../../services/bridges/RouterService";
 
 export class BaseCompoundV3Module extends Module {
     public name: string = "Base - Compound V3";
@@ -24,6 +23,11 @@ export class BaseCompoundV3Module extends Module {
         this.agent = new Wallet(privateKeyAgent, this.provider);
         this.module = CompoundV3Module__factory.connect(EVM_ADDRESS.base.compoundV3Module, this.agent);
         this.usdcContract = ERC20__factory.connect(EVM_ADDRESS.base.usdc, this.agent);
+    }
+
+    async getAgentOnChain(): Promise<string> {
+        let agentRegistered = await this.module.getAgent();
+        return agentRegistered;
     }
 
     async getAPY(): Promise<number> {
@@ -67,23 +71,22 @@ export class BaseCompoundV3Module extends Module {
             console.log(balance);
             if (balance < ethers.parseUnits(MIN_BRIDGE_AMOUNT.toString(), 6)) return;
             console.log(`Bridge from ${this.name} to ${module.name} with ${ethers.formatUnits(balance, 6)} USDC ....`);
-            let txnBridge = await routerService.getTxnBridgeUSDC(this.agent.address, module.address, this.chainId, module.chainId, this.usdcAddress, module.usdcAddress, BigInt(balance));
+            let txnBridge = await bridge.getTxnBridgeUSDC(this.agent.address, module.address, this.chainId, module.chainId, this.usdcAddress, module.usdcAddress, BigInt(balance));
             if (txnBridge.feeData.symbol == "ETH") {
                 let amount = BigInt(txnBridge.feeData.amount);
                 let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data, { value: amount });
                 let txReceipt = await txResponse.wait();
                 let txHash = txReceipt!.hash;
                 console.log("Send tx Bridge success: https://explorer.routernitro.com/tx/" + txReceipt!.hash);
-                await routerService.wait(txHash);
+                await bridge.wait(txHash);
                 return;
             }
             let txResponse = await this.module.bridgeAll(txnBridge.allowanceTo, txnBridge.to, txnBridge.data);
             let txReceipt = await txResponse.wait();
             let txHash = txReceipt!.hash;
             console.log("Send tx Bridge success: https://explorer.routernitro.com/tx/" + txReceipt!.hash);
-            await routerService.wait(txHash);
+            await bridge.wait(txHash);
             console.log(`Bridge success https://explorer.routernitro.com/tx/${txHash}`);
-            await fundFeeService.fundFee(txnBridge.feeOnDestChain, module.address, txHash, module.chainId);
         } catch (error) {
             console.log(" Error when transfer", error);
         }
@@ -103,14 +106,13 @@ export class BaseCompoundV3Module extends Module {
             console.log(`Not enough balance in Base Compound V3 Module, need ${amountInput} USDC, but only have ${balance} USDC`);
             return;
         }
-        let txnBridge = await routerService.getTxnBridgeUSDC(this.address, omni.address, this.chainId, omni.chainId, this.usdcAddress, omni.usdcAddress, amountInput);
+        let txnBridge = await bridge.getTxnBridgeUSDC(this.address, omni.address, this.chainId, omni.chainId, this.usdcAddress, omni.usdcAddress, amountInput);
         console.log("Bridge from base to Sapphire....");
         let txResponse = await this.module.bridge(amountInput, txnBridge.allowanceTo, txnBridge.to, txnBridge.data);
         let txReceipt = await txResponse.wait();
         let txHash = txReceipt!.hash;
         console.log("Send tx Bridge success: https://explorer.routernitro.com/tx/" + txReceipt!.hash);
-        await routerService.wait(txHash);
+        await bridge.wait(txHash);
         console.log(`Bridge success https://explorer.routernitro.com/tx/${txHash}`);
-        await fundFeeService.fundFee(txnBridge.feeOnDestChain, omni.address, txHash, omni.chainId);
     }
 }

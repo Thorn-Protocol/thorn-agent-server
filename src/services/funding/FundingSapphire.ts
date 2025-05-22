@@ -2,9 +2,8 @@ import { Contract, ethers, JsonRpcProvider, Wallet } from "ethers";
 import { ERC20__factory, FundFee, FundFee__factory } from "../../typechain-types";
 
 import { CHAIN_ID, EVM_ADDRESS, RPC } from "../../common/config/config";
-import { FungingTemplate } from "../FundFeeContract";
 
-export class FungingSapphire extends FungingTemplate {
+export class FundingFee {
     public chainId: string = CHAIN_ID.sapphire;
     private usdc: string;
     private agent: Wallet;
@@ -12,7 +11,6 @@ export class FungingSapphire extends FungingTemplate {
     private address: string;
     private contract: FundFee;
     constructor(privateKeyAgent: string) {
-        super();
         this.provider = new JsonRpcProvider(RPC.sapphire);
         this.agent = new Wallet(privateKeyAgent, this.provider);
         this.usdc = EVM_ADDRESS.sapphire.usdc;
@@ -20,15 +18,16 @@ export class FungingSapphire extends FungingTemplate {
         this.contract = FundFee__factory.connect(EVM_ADDRESS.sapphire.fundFee, this.agent);
     }
 
-    async funding(amount: bigint, address: string, txnHash: string) {
+    async funding(amount: number, address: string, txnHash: string) {
         console.log("Funding fee amount at Sapphire: ", amount);
+        let amountInput = ethers.parseUnits(amount.toString(), 6);
         let usdcContract = ERC20__factory.connect(this.usdc, this.agent);
         let balance = await usdcContract.balanceOf(this.address);
-        if (balance < amount) {
+        if (balance < amountInput) {
             console.log("Insufficient balance in Sapphire Fund Fee");
             return;
         }
-        let txResponse = await this.contract.fee_compensation(txnHash, address, amount);
+        let txResponse = await this.contract.fee_compensation(txnHash, address, amountInput);
         let txReceipt = await txResponse.wait();
         console.log("Funded successfully at https://explorer.oasis.io/mainnet/sapphire/tx/" + txReceipt!.hash);
     }

@@ -1,4 +1,4 @@
-export const MIN_BRIDGE_AMOUNT = 4; // 5 $
+export const MIN_BRIDGE_AMOUNT = 2; // 5 $
 export const MIN_BALANCE_TO_DEPOSIT = 1; // 2 $
 export const TIME_EACH_PROCESS = 30 * 60 * 1000;
 

@@ -39,6 +39,8 @@ export interface CompoundV3ModuleInterface extends Interface {
       | "comet"
       | "deposit"
       | "feeRecipient"
+      | "getAgent"
+      | "getGovernance"
       | "getLastDeposited"
       | "getPerformanceFeeBps"
       | "getTotalValue"
@@ -106,6 +108,11 @@ export interface CompoundV3ModuleInterface extends Interface {
   encodeFunctionData(functionFragment: "deposit", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "feeRecipient",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "getAgent", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getGovernance",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -185,6 +192,11 @@ export interface CompoundV3ModuleInterface extends Interface {
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "feeRecipient",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getAgent", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getGovernance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -458,6 +470,10 @@ export interface CompoundV3Module extends BaseContract {
 
   feeRecipient: TypedContractMethod<[], [string], "view">;
 
+  getAgent: TypedContractMethod<[], [string], "view">;
+
+  getGovernance: TypedContractMethod<[], [string], "view">;
+
   getLastDeposited: TypedContractMethod<[], [bigint], "view">;
 
   getPerformanceFeeBps: TypedContractMethod<[], [bigint], "view">;
@@ -574,6 +590,12 @@ export interface CompoundV3Module extends BaseContract {
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "feeRecipient"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "getAgent"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "getGovernance"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "getLastDeposited"

@@ -52,6 +52,7 @@ export interface OmniFarmingInterface extends Interface {
       | "governanceExecute"
       | "initialize"
       | "isInitialized"
+      | "lastTimeTotalAssetsUpdated"
       | "maxDeposit"
       | "maxMint"
       | "maxRedeem"
@@ -198,6 +199,10 @@ export interface OmniFarmingInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "lastTimeTotalAssetsUpdated",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "maxDeposit",
     values: [AddressLike]
   ): string;
@@ -308,7 +313,7 @@ export interface OmniFarmingInterface extends Interface {
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "updateTotalAssets",
-    values: [BigNumberish]
+    values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "userLockedShares",
@@ -390,6 +395,10 @@ export interface OmniFarmingInterface extends Interface {
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isInitialized",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lastTimeTotalAssetsUpdated",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "maxDeposit", data: BytesLike): Result;
@@ -922,6 +931,8 @@ export interface OmniFarming extends BaseContract {
 
   isInitialized: TypedContractMethod<[], [boolean], "view">;
 
+  lastTimeTotalAssetsUpdated: TypedContractMethod<[], [bigint], "view">;
+
   maxDeposit: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
 
   maxMint: TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
@@ -1030,7 +1041,11 @@ export interface OmniFarming extends BaseContract {
   unpause: TypedContractMethod<[], [void], "nonpayable">;
 
   updateTotalAssets: TypedContractMethod<
-    [newTotalAssets: BigNumberish],
+    [
+      lastTotalAssets: BigNumberish,
+      profit: BigNumberish,
+      deadline: BigNumberish
+    ],
     [void],
     "nonpayable"
   >;
@@ -1169,6 +1184,9 @@ export interface OmniFarming extends BaseContract {
     nameOrSignature: "isInitialized"
   ): TypedContractMethod<[], [boolean], "view">;
   getFunction(
+    nameOrSignature: "lastTimeTotalAssetsUpdated"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "maxDeposit"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;
   getFunction(
@@ -1296,7 +1314,15 @@ export interface OmniFarming extends BaseContract {
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "updateTotalAssets"
-  ): TypedContractMethod<[newTotalAssets: BigNumberish], [void], "nonpayable">;
+  ): TypedContractMethod<
+    [
+      lastTotalAssets: BigNumberish,
+      profit: BigNumberish,
+      deadline: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "userLockedShares"
   ): TypedContractMethod<[arg0: AddressLike], [bigint], "view">;

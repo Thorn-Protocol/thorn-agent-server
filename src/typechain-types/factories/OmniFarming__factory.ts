@@ -1007,6 +1007,19 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "lastTimeTotalAssetsUpdated",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -1518,7 +1531,17 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "newTotalAssets",
+        name: "lastTotalAssets",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "profit",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "deadline",
         type: "uint256",
       },
     ],

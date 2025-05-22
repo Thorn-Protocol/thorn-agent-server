@@ -13,6 +13,7 @@ export class LogService {
     }
     async log(message: string) {
         try {
+            console.log(message);
             await this.bot.telegram.sendMessage(this.chaiId, message, { parse_mode: "Markdown" });
         } catch (error) {
             console.error(error);
@@ -28,5 +29,4 @@ export class LogService {
         }
     }
 }
-
 export const logs = new LogService();

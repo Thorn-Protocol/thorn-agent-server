@@ -1,9 +1,19 @@
 import { ethers } from "ethers";
 import axios from "axios";
+import { logs } from "../logs/LogService";
+import { FundingFee } from "../funding/FundingSapphire";
 
 const PATH_FINDER_API_URL = "https://api-beta.pathfinder.routerprotocol.com/api";
 
 export class RouterService {
+    private fundingFee: FundingFee | undefined;
+
+    constructor() {}
+
+    setup(fundingFee: FundingFee) {
+        this.fundingFee = fundingFee;
+    }
+
     async getQuote(params: any) {
         const endpoint = "v2/quote";
         const quoteUrl = `${PATH_FINDER_API_URL}/${endpoint}`;
@@ -62,14 +72,6 @@ export class RouterService {
         let feeNumber = amountSend - amountReceived;
         let fee = ethers.parseUnits(feeNumber.toFixed(6), txn.destination.asset.decimals);
 
-        console.log(`
---Bridge invoice--
-from: ${srcChain}
-to: ${destChain}
-amountSend: ${amountSend}
-amountReceived: ${amountReceived}
-fee: ${feeNumber.toFixed(6)}
-`);
         return {
             allowanceTo: txn.allowanceTo,
             to: txn.txn.to,
@@ -92,39 +94,38 @@ fee: ${feeNumber.toFixed(6)}
         }
     }
 
-    async wait(txHash: string) {
-        await this.sleep(20 * 1000); // wait 20s for router catch event
-        let data = await this.fetchStatus(txHash);
-        if (data.src_timestamp == null) {
-            console.log(`Transaction ${txHash} is not found`);
-            return;
-        }
-
-        return new Promise(async (resolve, reject) => {
+    private async waitBridge(txHash: string) {
+        return new Promise(async (resolve: (fee: number) => void, reject: (error: any) => void) => {
             let data;
             try {
-                data = await this.fetchStatus(txHash);
-                if (data.status === "completed") {
-                    resolve(data);
-                } else {
-                    const checkStatus = async () => {
-                        try {
-                            data = await this.fetchStatus(txHash);
-                            if (data.status === "completed") {
-                                resolve(data);
-                            } else {
-                                setTimeout(checkStatus, 5000);
-                            }
-                        } catch (error) {
-                            reject(error);
+                const checkStatus = async () => {
+                    try {
+                        data = await this.fetchStatus(txHash);
+                        if (data.status === "completed") {
+                            let fee = Number(data.src_amount) - Number(data.dest_amount);
+                            resolve(fee);
+                        } else {
+                            logs.log(`Waiting for bridge for ${txHash} to complete...`);
+                            setTimeout(checkStatus, 30000);
                         }
-                    };
-                    checkStatus();
-                }
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                checkStatus();
             } catch (error) {
                 reject(error);
             }
         });
+    }
+
+    async wait(txHash: string) {
+        await this.waitBridge(txHash);
+        let data = await this.fetchStatus(txHash);
+        let fee = Number(data.src_amount) - Number(data.dest_amount);
+        if (this.fundingFee) {
+            await this.fundingFee.funding(fee, txHash, txHash);
+        }
     }
 
     async sleep(ms: number) {
@@ -219,4 +220,4 @@ fee: ${feeNumber.toFixed(6)}
     }
 }
 
-export const routerService = new RouterService();
+export const bridge = new RouterService();
