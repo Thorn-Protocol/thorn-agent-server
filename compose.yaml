@@ -2,7 +2,6 @@ services:
     omnifarming-rofl:
         image: "docker.io/ghoulouis/thorn-omnifarming-rofl:latest"
         platform: linux/amd64
-        container_name: omnifarming-rofl
         environment:
             - AGENT_EVM_PRIVATE_KEY=${AGENT_EVM_PRIVATE_KEY}
             - CENTIC_API_KEYS=${CENTIC_API_KEYS}
