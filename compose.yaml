@@ -3,6 +3,7 @@ services:
         image: "docker.io/ghoulouis/thorn-omnifarming-rofl:latest"
         platform: linux/amd64
         environment:
+            - IN_ROFL=TRUE
             - AGENT_EVM_PRIVATE_KEY=${AGENT_EVM_PRIVATE_KEY}
             - CENTIC_API_KEYS=${CENTIC_API_KEYS}
             - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
