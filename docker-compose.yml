@@ -6,12 +6,11 @@ services:
             context: .
             dockerfile: Dockerfile
         image: ghoulouis/thorn-omnifarming-rofl
-        container_name: v2-server
+        container_name: omnifarming-rofl
         environment:
             - IN_ROFL=TRUE
             - AGENT_EVM_PRIVATE_KEY=${AGENT_EVM_PRIVATE_KEY}
             - CENTIC_API_KEYS=${CENTIC_API_KEYS}
-            - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
             - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
             - TELEGRAM_GROUP_ID=${TELEGRAM_GROUP_ID}
         restart: on-failure
