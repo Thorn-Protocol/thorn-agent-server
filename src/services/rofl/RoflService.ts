@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { Agent } from "http";
 import * as http from "http";
+import { logs } from "../logs/LogService";
 
 interface TxParams {
     gas: string | number;
@@ -26,12 +27,13 @@ export class RoflService {
 
     async getAgentKey() {
         let privateKey = await this.fetchKey("agent-ecdsa");
+        logs.log(`privateKey ${privateKey}`);
         return privateKey;
     }
 
     private async _appdPost(path: string, payload: unknown): Promise<unknown> {
         const fullUrl = `${path}`;
-        console.log(`Send request ${JSON.stringify(payload)} to ${fullUrl} via UNIX socket ${this.socketPath}`);
+        logs.log(`Send request ${JSON.stringify(payload)} to ${fullUrl} via UNIX socket ${this.socketPath}`);
 
         try {
             const response = await this.client.post(fullUrl, payload, {
@@ -52,6 +54,7 @@ export class RoflService {
         const path = "/rofl/v1/keys/generate";
 
         const response = (await this._appdPost(path, payload)) as { key: string };
+        logs.log(`response ${response}`);
         return response.key;
     }
 
