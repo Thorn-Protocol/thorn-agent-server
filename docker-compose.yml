@@ -8,7 +8,7 @@ services:
         image: ghoulouis/thorn-omnifarming-rofl
         container_name: v2-server
         environment:
-            - IN_ROFL=${IN_ROFL}
+            - IN_ROFL=TRUE
             - AGENT_EVM_PRIVATE_KEY=${AGENT_EVM_PRIVATE_KEY}
             - CENTIC_API_KEYS=${CENTIC_API_KEYS}
             - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
