@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-export const IN_ROFL: boolean = process.env.IN_ROFL == "true";
+export const IN_ROFL: boolean = process.env.IN_ROFL == "TRUE";
 
 export const AGENT_EVM_PRIVATE_KEY = process.env.AGENT_EVM_PRIVATE_KEY ?? "";
 
