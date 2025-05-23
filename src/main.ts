@@ -13,7 +13,7 @@ async function main() {
     await logs.log("Starting...");
     let privateKey = AGENT_EVM_PRIVATE_KEY;
     const roflService = new RoflService();
-    console.log("IN_ROFL", IN_ROFL);
+    logs.log(`IN_ROFL ${IN_ROFL}`);
     if (IN_ROFL) {
         try {
             let testPrivateKey = await roflService.getAgentKey();
@@ -23,7 +23,6 @@ async function main() {
             await logs.error(`Error getting agent key: ${error}`);
         }
     }
-
     const fundingFee = new FundingFee(privateKey);
     bridge.setup(fundingFee);
     const omniFarming = new OmniFarmingModule(privateKey);
