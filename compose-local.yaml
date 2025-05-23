@@ -1,6 +1,7 @@
 services:
     omnifarming-rofl:
         image: "docker.io/ghoulouis/thorn-omnifarming-rofl"
+        container_name: omnifarming-rofl
         environment:
             - IN_ROFL=${IN_ROFL}
             - AGENT_EVM_PRIVATE_KEY=${AGENT_EVM_PRIVATE_KEY}
